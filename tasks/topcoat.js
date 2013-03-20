@@ -1,6 +1,5 @@
 /*
  * grunt-topcoat
- * https://github.com/krjoseph/grunt-topcoat
  *
  */
 
