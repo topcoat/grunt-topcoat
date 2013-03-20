@@ -77,6 +77,7 @@ module.exports = function(grunt) {
             async.series([
 
             function(callback) {
+                // Download controls into srcPath/controls/
                 if (!_.isEmpty(controls)) {
                     var controlsPath = srcPath + "controls/";
                     file.mkdir(controlsPath);
@@ -98,7 +99,7 @@ module.exports = function(grunt) {
             },
 
             function(callback) {
-                // Download theme into srcPath/theme
+                // Download skins into srcPath/skins/
                 if (!_.isEmpty(skins)) {
                     var skinsPath = srcPath + "skins/";
                     file.mkdir(skinsPath);
