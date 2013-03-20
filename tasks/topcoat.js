@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 
     // Please see the grunt documentation for more information regarding task
     // creation: https://github.com/gruntjs/grunt/blob/devel/docs/toc.md
-    grunt.registerMultiTask('topcoat', 'Clones git projects to specified directory.', function() {
+    grunt.registerMultiTask('topcoat', 'Downloads specified repos for use in the TopDoat build process.', function() {
         var _ = grunt.util._,
             async = grunt.util.async,
             done = this.async(),
@@ -86,7 +86,8 @@ module.exports = function(grunt) {
                     file.mkdir(controlsPath);
                     downloadResources(controls, controlsPath, callback);
                 } else {
-                    grunt.fail.warn("No controls specified");
+                    callback();
+                    grunt.log.writeln("No controls specified");
                 }
             },
 
@@ -95,7 +96,8 @@ module.exports = function(grunt) {
                 if (!_.isEmpty(theme)) {
                     downloadResources(theme, srcPath, callback);
                 } else {
-                    grunt.fail.warn("No theme specified");
+                    callback();
+                    grunt.log.writeln("No theme specified");
                 }
             },
 
@@ -106,6 +108,7 @@ module.exports = function(grunt) {
                     file.mkdir(skinsPath);
                     downloadResources(skins, skinsPath, callback);
                 } else {
+                    callback();
                     grunt.log.writeln("No skins specified");
                 }
             }, function() {
