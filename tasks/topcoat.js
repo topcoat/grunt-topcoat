@@ -12,7 +12,7 @@ module.exports = function(grunt) {
 
     // Please see the grunt documentation for more information regarding task
     // creation: https://github.com/gruntjs/grunt/blob/devel/docs/toc.md
-    grunt.registerMultiTask('topcoat_init', 'Clones git projects to specified directory.', function() {
+    grunt.registerMultiTask('topcoat', 'Clones git projects to specified directory.', function() {
         var _ = grunt.util._;
         var async = grunt.util.async;
         var done = this.async();

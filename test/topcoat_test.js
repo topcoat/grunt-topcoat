@@ -23,7 +23,7 @@ var fs    = require('fs');
     test.ifError(value)
 */
 
-exports.topcoat_init = {
+exports.topcoat = {
     init: function(test) {
         fs.exists("tmp/src/controls/button", function(exists) {
             test.ok(exists);
