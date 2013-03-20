@@ -5,6 +5,9 @@
 
 'use strict';
 
+var fs = require('fs'),
+    request = require('request');
+
 module.exports = function(grunt) {
 
     // Please see the grunt documentation for more information regarding task
@@ -29,6 +32,21 @@ module.exports = function(grunt) {
                 if (key) return key.split('/')[1];
             };
 
+        var curl = function(url, path, callback) {
+            request.get({
+                'url': url,
+                'encoding': 'binary'
+            },
+            function(error, result, body) {
+                if (!error) {
+                    fs.writeFileSync(path, body, 'binary');
+                } else {
+                    grunt.fail.fatal(error);
+                }
+                callback(error, body);
+            });
+        }
+
         var downloadResources = function(obj, path, callback) {
                 var urls = [];
                 _.forIn(obj, function(value, key) {
@@ -43,13 +61,7 @@ module.exports = function(grunt) {
                 async.forEachSeries(urls, function(obj, next) {
                     var zipPath = path + obj.name + ext;
                     grunt.log.writeln("Downloading: " + zipPath);
-                    var downloadProcess = spawn({
-                        cmd: 'curl',
-                        args: ['-L', '-o', zipPath, obj.url]
-                    }, next);
-
-                    downloadProcess.stdout.pipe(process.stdout);
-                    downloadProcess.stderr.pipe(process.stderr);
+                    curl(obj.url, zipPath, next);
                 }, callback);
             }
 
@@ -111,7 +123,5 @@ module.exports = function(grunt) {
             }, function() {
                 done();
             }]);
-
     });
-
 };
