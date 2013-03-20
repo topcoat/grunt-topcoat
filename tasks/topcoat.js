@@ -23,8 +23,7 @@ module.exports = function(grunt) {
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
-            theme = deps.theme || {},
-            controlsUrls, skinsUrls;
+            theme = deps.theme || {};
 
         var getRepoName = function(key) {
                 if (key) return key.split('/')[1];
