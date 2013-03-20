@@ -2,8 +2,6 @@
  * grunt-topcoat
  * https://github.com/krjoseph/grunt-topcoat
  *
- * Copyright (c) 2013 @dam
- * Licensed under the MIT license.
  */
 
 'use strict';
