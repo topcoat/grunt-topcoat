@@ -25,7 +25,7 @@ var fs    = require('fs');
 
 exports.topcoat = {
     init: function(test) {
-        fs.exists("tmp/src/controls/button", function(exists) {
+        fs.exists("tmp/src/controls/button.zip", function(exists) {
             test.ok(exists);
         });
         test.done();
