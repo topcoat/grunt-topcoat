@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 
         // Configuration to be run (and then tested).
         topcoat: {
-            init: {
+            download: {
                 options: {
                     srcPath: 'tmp/src/',
                     repos: '<%= pkg.topcoat %>'

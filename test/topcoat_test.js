@@ -24,10 +24,22 @@ var fs    = require('fs');
 */
 
 exports.topcoat = {
-    init: function(test) {
+    controls: function(test) {
         fs.exists("tmp/src/controls/button.zip", function(exists) {
             test.ok(exists);
         });
+
+        // This is just a placeholder until we have more controls repos.
+        // I needed to test is downloading more than one repo.
+        // TODO: Update this test once more controls repos are added
+        fs.exists("tmp/src/controls/button-skin.zip", function(exists) {
+            test.ok(exists);
+        });
+
+        fs.exists("tmp/src/theme.zip", function(exists) {
+            test.ok(exists);
+        });
+
         test.done();
     }
 };

@@ -1,6 +1,6 @@
 /*
- * grunt-topcoat-init
- * https://github.com/krjoseph/grunt-topcoat-init
+ * grunt-topcoat
+ * https://github.com/krjoseph/grunt-topcoat
  *
  * Copyright (c) 2013 @dam
  * Licensed under the MIT license.
@@ -32,8 +32,11 @@ module.exports = function(grunt) {
         // If a version number is given we assume it is a tag and use this url
         // convention:
         // https://github.com/topcoat/topcoat/archive/0.1.0.zip
+        //
+        // TODO:
         // If no version is given we use the download api with this url convention:
         // https://api.github.com/repos/user/repo/zipball/dev
+        //
         // Loop over controls object
         // Example:
         // "controls": {
