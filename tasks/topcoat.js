@@ -56,7 +56,6 @@ module.exports = function(grunt) {
                         url: prefix + key + suffix + value + ext
                     });
                 });
-                grunt.log.writeln("URLS:", urls);
 
                 async.forEachSeries(urls, function(obj, next) {
                     var zipPath = path + obj.name + ext;
