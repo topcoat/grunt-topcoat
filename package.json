@@ -1,0 +1,52 @@
+{
+  "name": "grunt-topcoat-init",
+  "description": "grunt plugin to download topcoat dependencies.",
+  "version": "0.0.0",
+  "homepage": "https://github.com/krjoseph/grunt-topcoat-init",
+  "author": {
+    "name": "@dam",
+    "email": "kristoferjoseph@gmail.com",
+    "url": "http://www.kristoferjoseph.com"
+  },
+  "topcoat": {
+      "controls": {
+          "topcoat/button": "0.1.0",
+          "topcoat/button-skin": "0.1.0"
+      },
+      "skins": {
+          "topcoat/button-skin": "0.1.0"
+      },
+      "theme": {
+          "topcoat/theme": "0.2.0"
+      }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/krjoseph/grunt-topcoat-init.git"
+  },
+  "bugs": {
+    "url": "https://github.com/krjoseph/grunt-topcoat-init/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/krjoseph/grunt-topcoat-init/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "0.1.1rc6",
+    "grunt-contrib-clean": "0.4.0rc6",
+    "grunt-contrib-nodeunit": "0.1.2rc6",
+    "grunt": "0.4.0rc6"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
