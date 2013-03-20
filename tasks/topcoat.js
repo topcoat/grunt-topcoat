@@ -13,21 +13,47 @@ module.exports = function(grunt) {
     // Please see the grunt documentation for more information regarding task
     // creation: https://github.com/gruntjs/grunt/blob/devel/docs/toc.md
     grunt.registerMultiTask('topcoat', 'Clones git projects to specified directory.', function() {
-        var _ = grunt.util._;
-        var async = grunt.util.async;
-        var done = this.async();
-        var spawn = grunt.util.spawn;
-        var file = grunt.file;
-        var options = this.options();
-        var prefix = "https://github.com/";
-        var suffix = "/archive/";
-        var ext = ".zip";
-        var srcPath = options.srcPath || "src/";
-        var deps = options.repos;
-        var controls = deps.controls || {};
-        var skins = deps.skins || {};
-        var theme = deps.theme || {};
-        var controlsUrls, skinsUrls;
+        var _ = grunt.util._,
+            async = grunt.util.async,
+            done = this.async(),
+            spawn = grunt.util.spawn,
+            file = grunt.file,
+            options = this.options(),
+            prefix = "https://github.com/",
+            suffix = "/archive/",
+            ext = ".zip",
+            srcPath = options.srcPath || "src/",
+            deps = options.repos,
+            controls = deps.controls || {},
+            skins = deps.skins || {},
+            theme = deps.theme || {},
+            controlsUrls, skinsUrls;
+
+        var getRepoName = function(key) {
+                if (key) return key.split('/')[1];
+            };
+
+        var downloadResources = function(obj, path) {
+            var urls = [];
+            _.forIn(obj, function(value, key) {
+                var name = getRepoName(key);
+                urls.push({
+                    name: name,
+                    url: prefix + key + suffix + value + ext
+                });
+            });
+
+            async.forEachSeries(urls, function(obj, next) {
+                var zipPath = path + obj.name + ext;
+                var downloadProcess = spawn({
+                    cmd: 'curl',
+                    args: ['-L', '-o', zipPath, obj.url]
+                }, next);
+
+                downloadProcess.stdout.pipe(process.stdout);
+                downloadProcess.stderr.pipe(process.stderr);
+            }, done);
+        }
 
         // If a version number is given we assume it is a tag and use this url
         // convention:
@@ -51,34 +77,21 @@ module.exports = function(grunt) {
         // https://github.com/topcoat/button/archive/0.1.0.zip
         //
         if (!_.isEmpty(controls)) {
-            controlsUrls = [];
-            var controlName;
             var controlsPath = srcPath + "controls/";
-
             file.mkdir(controlsPath);
-
-            _.forIn(controls, function(value, key) {
-                controlName = key.split('/')[1];
-                controlsUrls.push({
-                    name: controlName,
-                    url: prefix + key + suffix + value + ext
-                });
-            });
-
-            async.forEachSeries(controlsUrls, function(obj, next) {
-                var zipPath = controlsPath + obj.name + ext;
-                var downloadProcess = spawn({
-                    cmd: 'curl',
-                    args: ['-o', zipPath, obj.url]
-                }, next);
-
-                downloadProcess.stdout.pipe(process.stdout);
-                downloadProcess.stderr.pipe(process.stderr);
-            }, done);
-
+            downloadResources(controls, controlsPath);
         } else {
-            console.log("Controls was empty");
+            grunt.log.writeln("No controls specified");
+        }
+
+        // Download theme into srcPath/theme
+        if (!_.isEmpty(theme)) {
+            grunt.log.writeln("Downloading theme");
+            downloadResources(theme, srcPath);
+        } else {
+            grunt.log.writeln("No theme specified");
         }
 
     });
+
 };
