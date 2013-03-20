@@ -24,7 +24,7 @@ var fs    = require('fs');
 */
 
 exports.topcoat = {
-    controls: function(test) {
+    download: function(test) {
         fs.exists("tmp/src/controls/button.zip", function(exists) {
             test.ok(exists);
         });
@@ -37,6 +37,10 @@ exports.topcoat = {
         });
 
         fs.exists("tmp/src/theme.zip", function(exists) {
+            test.ok(exists);
+        });
+
+        fs.exists("tmp/src/skins/button-skin.zip", function(exists) {
             test.ok(exists);
         });
 
