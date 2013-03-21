@@ -46,7 +46,7 @@ grunt.initConfig({
 ```
 
 You should only run this task once to get started.
-After the initial run you only need to run it when you want to update the included repos or their verisons.
+After the initial run you only need to run it when you want to update the included repos or their versions.
 You can update the included repos by editing the entries in the topcoat section of package.json and then running this task again.
 
 
