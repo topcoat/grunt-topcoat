@@ -11,7 +11,7 @@
   "topcoat": {
     "controls": {
       "topcoat/button": "0.1.0",
-      "topcoat/button-skin": "0.1.0"
+      "topcoat/button-skin": ""
     },
     "skins": {
       "topcoat/button-skin": "0.1.0"
@@ -40,13 +40,14 @@
   "scripts": {
     "test": "grunt test"
   },
+  "dependencies": {
+    "request": "~2.16.6"
+  },
   "devDependencies": {
     "grunt-contrib-jshint": "0.1.1rc6",
     "grunt-contrib-clean": "0.4.0rc6",
     "grunt-contrib-nodeunit": "0.1.2rc6",
-    "grunt": "0.4.0rc6",
-    "request": "~2.16.6",
-    "node-zip": "~1.0.1"
+    "grunt": "0.4.0rc6"
   },
   "keywords": [
     "gruntplugin"

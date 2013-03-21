@@ -10,27 +10,64 @@ var fs = require('fs'),
 
 module.exports = function(grunt) {
 
-    // Please see the grunt documentation for more information regarding task
-    // creation: https://github.com/gruntjs/grunt/blob/devel/docs/toc.md
     grunt.registerMultiTask('topcoat', 'Downloads specified repos for use in the TopDoat build process.', function() {
         var _ = grunt.util._,
             async = grunt.util.async,
             done = this.async(),
-            spawn = grunt.util.spawn,
             file = grunt.file,
             options = this.options(),
-            prefix = "https://github.com/",
-            suffix = "/archive/",
-            ext = ".zip",
             srcPath = options.srcPath || "src/",
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
             theme = deps.theme || {};
 
-        var getRepoName = function(key) {
-                if (key) return key.split('/')[1];
+        // Splits the supplied user/repo name so we can use just the repo name
+        //   for the zip file name.
+        //   Example:
+        //     topcoat/button
+        //     button.zip
+        var getDirectoryName = function(repo) {
+                if (repo) return repo.split('/')[1];
             };
+
+        // If a version number is given we assume it is a tag and use this url
+        // convention:
+        // https://github.com/user/repo/archive/0.1.0.zip
+        //
+        // If no tag is given we use the download api with this url convention:
+        // https://api.github.com/repos/user/repo/zipball/dev
+        var getDownloadURL = function(repo, tag) {
+            var downloadURL = '';
+            if (tag) {
+                downloadURL = getTagArchiveURL(repo, tag)
+            } else {
+                downloadURL = getNightlyArchiveURL(repo);
+            }
+            return downloadURL
+        };
+
+        // Returns a download url for a tagged git archive
+        // repo: user/repo unique name of git repo. Ex: topcoat/button
+        // tag:  tag number of git tag to use
+        // https://github.com/user/repo/archive/0.1.0.zip
+        var getTagArchiveURL = function(repo, tag) {
+            var prefix = "https://github.com/",
+                suffix = "/archive/",
+                ext = ".zip";
+
+            return prefix + repo + suffix + tag + ext;
+        };
+
+        // Returns a download url for the current master of a git repo
+        // repo: user/repo unique name of git repo. Ex: topcoat/button
+        // https://api.github.com/repos/user/repo/zipball/dev
+        var getNightlyArchiveURL = function(repo) {
+            var prefix = "https://api.github.com/repos/",
+                suffix = "/zipball/dev";
+
+            return prefix + repo + suffix;
+        };
 
         var curl = function(url, path, callback) {
             request.get({
@@ -50,27 +87,20 @@ module.exports = function(grunt) {
         var downloadResources = function(obj, path, callback) {
                 var urls = [];
                 _.forIn(obj, function(value, key) {
-                    var name = getRepoName(key);
+                    var name = getDirectoryName(key);
                     urls.push({
                         name: name,
-                        url: prefix + key + suffix + value + ext
+                        url: getDownloadURL(key, value)
                     });
                 });
 
                 async.forEachSeries(urls, function(obj, next) {
-                    var zipPath = path + obj.name + ext;
-                    grunt.log.writeln("Downloading: " + zipPath);
+                    var zipPath = path + obj.name + ".zip";
+                    grunt.log.writeln("Downloading: " + obj.url + "\n into >> " + zipPath);
                     curl(obj.url, zipPath, next);
                 }, callback);
             }
 
-            // If a version number is given we assume it is a tag and use this url
-            // convention:
-            // https://github.com/topcoat/topcoat/archive/0.1.0.zip
-            //
-            // TODO:
-            // If no version is given we use the download api with this url convention:
-            // https://api.github.com/repos/user/repo/zipball/dev
             //
             // Loop over controls object
             // Example:
