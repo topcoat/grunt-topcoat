@@ -73,6 +73,11 @@ module.exports = function(grunt) {
             return prefix + repo + suffix;
         };
 
+        // Cross platform "curl" like functionality
+        // url: url to download from
+        // path: path to write the downloaded artifact to
+        // callback: function to call once download completes or error is
+        // thrown
         var curl = function(url, path, callback) {
             request.get({
                 'url': url,
@@ -88,6 +93,12 @@ module.exports = function(grunt) {
             });
         };
 
+        // Loop over topcoat dependency object and downloads dependecies in
+        // order.
+        // obj: topcoat dependency object defined in package.json
+        // path: destination directory path to download dependencies into
+        // callback: function to call once all dependencies have finished
+        // downloading
         var downloadResources = function(obj, path, callback) {
                 var urls = [];
                 _.forIn(obj, function(value, key) {
@@ -105,20 +116,14 @@ module.exports = function(grunt) {
                 }, callback);
             };
 
+            // Download controls, theme and skins
+            // controls and the theme to use is downloaded into the topcoat
+            // repo by the topcoat grunt script
             //
-            // Loop over controls object
-            // Example:
-            // "controls": {
-            //    "topcoat/button": "0.1.0"
-            //  }
-            //
-            //  controls becomes the name of the directory under src. src/controls
-            //  download url is constructed with:
-            //    prefix + key + suffix + value + ext
-            //
-            // Example:
-            // https://github.com/topcoat/button/archive/0.1.0.zip
-            //
+            // skins are downloaded into the theme by the theme repos grunt
+            // script
+            // TODO: Find out a way to automate calling grunt on the theme
+            // after it has been downloaded and unzipped in the topcoat repo
             async.series([
 
             function(callback) {
