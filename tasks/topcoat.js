@@ -28,7 +28,9 @@ module.exports = function(grunt) {
         //     topcoat/button
         //     button.zip
         var getDirectoryName = function(repo) {
-                if (repo) return repo.split('/')[1];
+                if (repo) {
+                    return repo.split('/')[1];
+                }
             };
 
         // If a version number is given we assume it is a tag and use this url
@@ -40,11 +42,11 @@ module.exports = function(grunt) {
         var getDownloadURL = function(repo, tag) {
             var downloadURL = '';
             if (tag) {
-                downloadURL = getTagArchiveURL(repo, tag)
+                downloadURL = getTagArchiveURL(repo, tag);
             } else {
                 downloadURL = getNightlyArchiveURL(repo);
             }
-            return downloadURL
+            return downloadURL;
         };
 
         // Returns a download url for a tagged git archive
@@ -62,9 +64,11 @@ module.exports = function(grunt) {
         // Returns a download url for the current master of a git repo
         // repo: user/repo unique name of git repo. Ex: topcoat/button
         // https://api.github.com/repos/user/repo/zipball/dev
+        // api is described here:
+        // http://developer.github.com/v3/repos/contents/#get-archive-link
         var getNightlyArchiveURL = function(repo) {
             var prefix = "https://api.github.com/repos/",
-                suffix = "/zipball/dev";
+                suffix = "/zipball";
 
             return prefix + repo + suffix;
         };
@@ -82,7 +86,7 @@ module.exports = function(grunt) {
                 }
                 callback(error, body);
             });
-        }
+        };
 
         var downloadResources = function(obj, path, callback) {
                 var urls = [];
@@ -99,7 +103,7 @@ module.exports = function(grunt) {
                     grunt.log.writeln("Downloading: " + obj.url + "\n into >> " + zipPath);
                     curl(obj.url, zipPath, next);
                 }, callback);
-            }
+            };
 
             //
             // Loop over controls object
