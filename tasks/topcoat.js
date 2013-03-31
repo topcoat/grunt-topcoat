@@ -6,7 +6,9 @@
 'use strict';
 
 var fs = require('fs'),
-    request = require('request');
+    path = require('path'),
+    request = require('request'),
+    ProgressBar = require('progress');
 
 module.exports = function(grunt) {
 
@@ -40,26 +42,26 @@ module.exports = function(grunt) {
         // If no tag is given we use the download api with this url convention:
         // https://api.github.com/repos/user/repo/zipball/dev
         var getDownloadURL = function(repo, tag) {
-            var downloadURL = '';
-            if (tag) {
-                downloadURL = getTagArchiveURL(repo, tag);
-            } else {
-                downloadURL = getNightlyArchiveURL(repo);
-            }
-            return downloadURL;
-        };
+                var downloadURL = '';
+                if (tag) {
+                    downloadURL = getTagArchiveURL(repo, tag);
+                } else {
+                    downloadURL = getNightlyArchiveURL(repo);
+                }
+                return downloadURL;
+            };
 
         // Returns a download url for a tagged git archive
         // repo: user/repo unique name of git repo. Ex: topcoat/button
         // tag:  tag number of git tag to use
         // https://github.com/user/repo/archive/0.1.0.zip
         var getTagArchiveURL = function(repo, tag) {
-            var prefix = "https://github.com/",
-                suffix = "/archive/",
-                ext = ".zip";
+                var prefix = "https://github.com/",
+                    suffix = "/archive/",
+                    ext = ".zip";
 
-            return prefix + repo + suffix + tag + ext;
-        };
+                return prefix + repo + suffix + tag + ext;
+            };
 
         // Returns a download url for the current master of a git repo
         // repo: user/repo unique name of git repo. Ex: topcoat/button
@@ -67,11 +69,11 @@ module.exports = function(grunt) {
         // api is described here:
         // http://developer.github.com/v3/repos/contents/#get-archive-link
         var getNightlyArchiveURL = function(repo) {
-            var prefix = "https://api.github.com/repos/",
-                suffix = "/zipball";
+                var prefix = "https://api.github.com/repos/",
+                    suffix = "/zipball";
 
-            return prefix + repo + suffix;
-        };
+                return prefix + repo + suffix;
+            };
 
         // Cross platform "curl" like functionality
         // url: url to download from
@@ -79,19 +81,38 @@ module.exports = function(grunt) {
         // callback: function to call once download completes or error is
         // thrown
         var curl = function(url, path, callback) {
-            request.get({
-                'url': url,
-                'encoding': 'binary'
-            },
-            function(error, result, body) {
-                if (!error) {
-                    fs.writeFileSync(path, body, 'binary');
-                } else {
-                    grunt.fail.fatal(error);
-                }
-                callback(error, body);
-            });
-        };
+                var req = request.get({
+                    'url': url,
+                    'encoding': 'binary'
+                }, function(error, result, body) {
+                    if (!error) {
+                        fs.writeFileSync(path, body, 'binary');
+                    } else {
+                        grunt.fail.fatal(error);
+                    }
+                    callback(error, body);
+                });
+
+//                req.on('response', function(res) {
+//                    var len = parseInt(res.headers['content-length'], 10);
+//
+//                    console.log();
+//                    var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
+//                        complete: '=',
+//                        incomplete: ' ',
+//                        width: 20,
+//                        total: len
+//                    });
+//
+//                    res.on('data', function(chunk) {
+//                        bar.tick(chunk.length);
+//                    });
+//
+//                    res.on('end', function() {
+//                        console.log('\n');
+//                    });
+//                });
+            };
 
         // Loop over topcoat dependency object and downloads dependecies in
         // order.
@@ -116,50 +137,77 @@ module.exports = function(grunt) {
                 }, callback);
             };
 
-            // Download controls, theme and skins
-            // controls and the theme to use is downloaded into the topcoat
-            // repo by the topcoat grunt script
-            //
-            // skins are downloaded into the theme by the theme repos grunt
-            // script
-            // TODO: Find out a way to automate calling grunt on the theme
-            // after it has been downloaded and unzipped in the topcoat repo
-            async.series([
+        // Download controls, theme and skins
+        // controls and the theme to use is downloaded into the topcoat
+        // repo by the topcoat grunt script
+        //
+        // skins are downloaded into the theme by the theme repos grunt
+        // script
+        // TODO: Find out a way to automate calling grunt on the theme
+        // after it has been downloaded and unzipped in the topcoat repo
+        async.series([
 
-            function(callback) {
-                // Download controls into srcPath/controls/
-                if (!_.isEmpty(controls)) {
-                    var controlsPath = srcPath + "controls/";
-                    file.mkdir(controlsPath);
-                    downloadResources(controls, controlsPath, callback);
-                } else {
-                    callback();
-                    grunt.log.writeln("No controls specified");
-                }
-            },
+        function(callback) {
+            // Download controls into srcPath/controls/
+            if (!_.isEmpty(controls)) {
+                var controlsPath = srcPath + "controls/";
+                file.mkdir(controlsPath);
+                downloadResources(controls, controlsPath, callback);
+            } else {
+                callback();
+                grunt.log.writeln("No controls specified");
+            }
+        },
 
-            function(callback) {
-                // Download theme into srcPath/theme
-                if (!_.isEmpty(theme)) {
-                    downloadResources(theme, srcPath, callback);
-                } else {
-                    callback();
-                    grunt.log.writeln("No theme specified");
-                }
-            },
+        function(callback) {
+            grunt.task.run('unzip:controls');
+            callback();
+        },
 
-            function(callback) {
-                // Download skins into srcPath/skins/
-                if (!_.isEmpty(skins)) {
-                    var skinsPath = srcPath + "skins/";
-                    file.mkdir(skinsPath);
-                    downloadResources(skins, skinsPath, callback);
-                } else {
-                    callback();
-                    grunt.log.writeln("No skins specified");
-                }
-            }, function() {
-                done();
-            }]);
+        function(callback) {
+            // Download theme into srcPath/theme
+            if (!_.isEmpty(theme)) {
+                downloadResources(theme, srcPath, callback);
+            } else {
+                callback();
+                grunt.log.writeln("No theme specified");
+            }
+        },
+
+        function(callback) {
+            grunt.task.run('unzip:theme');
+            callback();
+        },
+
+        function(callback) {
+            // FIXME: Need to unzip the theme before we can download skins
+            // into it.
+            // Download skins into srcPath/theme-*/skins/
+            if (!_.isEmpty(skins)) {
+                var themePath = grunt.file.expand('src/theme-*'),
+                    skinsPath = srcPath + "skins/";
+
+                grunt.log.write("themePath "+ themePath);
+                file.mkdir(skinsPath);
+                downloadResources(skins, skinsPath, callback);
+            } else {
+                callback();
+                grunt.log.writeln("No skins specified");
+            }
+        },
+
+        function(callback) {
+            grunt.task.run('unzip:skins');
+            callback();
+        },
+
+        function(callback) {
+            grunt.task.run('clean:zip');
+            callback();
+        },
+
+        function() {
+            done();
+        }]);
     });
 };

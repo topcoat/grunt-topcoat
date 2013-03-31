@@ -25,22 +25,23 @@ var fs    = require('fs');
 
 exports.topcoat = {
     download: function(test) {
-        fs.exists("tmp/src/controls/button.zip", function(exists) {
+        fs.exists("tmp/src/controls/button-0.1.0", function(exists) {
             test.ok(exists);
         });
 
         // This is just a placeholder until we have more controls repos.
         // I needed to test is downloading more than one repo.
         // TODO: Update this test once more controls repos are added
-        fs.exists("tmp/src/controls/button-skin.zip", function(exists) {
+        var buttonBase = grunt.file.expand('tmp/src/controls/topcoat-button-base-*')[0];
+        fs.exists(buttonBase, function(exists) {
             test.ok(exists);
         });
 
-        fs.exists("tmp/src/theme.zip", function(exists) {
+        fs.exists("tmp/src/theme-0.1.0", function(exists) {
             test.ok(exists);
         });
 
-        fs.exists("tmp/src/skins/button-skin.zip", function(exists) {
+        fs.exists("tmp/src/skins/button-0.1.0", function(exists) {
             test.ok(exists);
         });
 

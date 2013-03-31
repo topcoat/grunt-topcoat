@@ -22,7 +22,8 @@ module.exports = function(grunt) {
 
         // Before generating any new files, remove any previously-created files.
         clean: {
-            tests: ['tmp']
+            tests: ['tmp'],
+            zip: ['tmp/src/*.zip', 'tmp/src/controls/*.zip', 'tmp/src/skins/*.zip']
         },
 
         // Configuration to be run (and then tested).
@@ -32,6 +33,21 @@ module.exports = function(grunt) {
                     srcPath: 'tmp/src/',
                     repos: '<%= pkg.topcoat %>'
                 }
+            }
+        },
+
+        unzip: {
+            controls: {
+                src: "tmp/src/controls/*.zip",
+                dest: "tmp/src/controls"
+            },
+            theme: {
+                src: "tmp/src/*.zip",
+                dest: "tmp/src/"
+            },
+            skins: {
+                src: "tmp/src/skins/*.zip",
+                dest: "tmp/src/skins"
             }
         },
 
@@ -49,6 +65,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
+    grunt.loadNpmTasks('grunt-zip');
 
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this
     // plugin's task(s), then test the result.
