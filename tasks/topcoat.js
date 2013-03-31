@@ -84,7 +84,7 @@ module.exports = function(grunt) {
                 var req = request.get({
                     'url': url,
                     'encoding': 'binary'
-                }, function(error, result, body) {
+                }, function(error, response, body) {
                     if (!error) {
                         fs.writeFileSync(path, body, 'binary');
                     } else {
@@ -93,25 +93,20 @@ module.exports = function(grunt) {
                     callback(error, body);
                 });
 
-//                req.on('response', function(res) {
-//                    var len = parseInt(res.headers['content-length'], 10);
-//
-//                    console.log();
-//                    var bar = new ProgressBar('  downloading [:bar] :percent :etas', {
-//                        complete: '=',
-//                        incomplete: ' ',
-//                        width: 20,
-//                        total: len
-//                    });
-//
-//                    res.on('data', function(chunk) {
-//                        bar.tick(chunk.length);
-//                    });
-//
-//                    res.on('end', function() {
-//                        console.log('\n');
-//                    });
-//                });
+                req.on('response', function(res) {
+                    var len = parseInt(res.headers['content-length'], 10);
+
+                    var bar = new ProgressBar('Progress [:bar] :percent :etas', {
+                        complete: '=',
+                        incomplete: ' ',
+                        width: 20,
+                        total: len
+                    });
+
+                    res.on('data', function(chunk) {
+                        bar.tick(chunk.length);
+                    });
+                });
             };
 
         // Loop over topcoat dependency object and downloads dependecies in
@@ -132,19 +127,13 @@ module.exports = function(grunt) {
 
                 async.forEachSeries(urls, function(obj, next) {
                     var zipPath = path + obj.name + ".zip";
-                    grunt.log.writeln("Downloading: " + obj.url + "\n into >> " + zipPath);
+                    grunt.log.writeln("\nDownloading: " + obj.url + "\nTo => " + zipPath);
                     curl(obj.url, zipPath, next);
                 }, callback);
             };
 
-        // Download controls, theme and skins
-        // controls and the theme to use is downloaded into the topcoat
-        // repo by the topcoat grunt script
-        //
-        // skins are downloaded into the theme by the theme repos grunt
-        // script
-        // TODO: Find out a way to automate calling grunt on the theme
-        // after it has been downloaded and unzipped in the topcoat repo
+        // Download controls, theme and skins into specified folders for the
+        // build
         async.series([
 
         function(callback) {
@@ -180,14 +169,9 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            // FIXME: Need to unzip the theme before we can download skins
-            // into it.
-            // Download skins into srcPath/theme-*/skins/
+            // Download theme into srcPath/skins
             if (!_.isEmpty(skins)) {
-                var themePath = grunt.file.expand('src/theme-*'),
-                    skinsPath = srcPath + "skins/";
-
-                grunt.log.write("themePath "+ themePath);
+                var skinsPath = srcPath + "skins/";
                 file.mkdir(skinsPath);
                 downloadResources(skins, skinsPath, callback);
             } else {
