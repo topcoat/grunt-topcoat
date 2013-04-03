@@ -23,7 +23,7 @@ module.exports = function(grunt) {
         // Before generating any new files, remove any previously-created files.
         clean: {
             tests: ['tmp'],
-            zip: ['tmp/src/*.zip', 'tmp/src/controls/*.zip', 'tmp/src/skins/*.zip']
+            zip: ['tmp/src/*.zip', 'tmp/src/controls/*.zip', 'tmp/src/utils/*.zip', 'tmp/src/skins/*.zip']
         },
 
         // Configuration to be run (and then tested).
@@ -44,6 +44,10 @@ module.exports = function(grunt) {
             theme: {
                 src: "tmp/src/*.zip",
                 dest: "tmp/src/"
+            },
+            utils: {
+                src: "tmp/src/utils/*.zip",
+                dest: "tmp/src/utils"
             },
             skins: {
                 src: "tmp/src/skins/*.zip",

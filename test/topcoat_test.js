@@ -37,6 +37,11 @@ exports.topcoat = {
             test.ok(exists);
         });
 
+        var utils = grunt.file.expand('tmp/src/utils/topcoat-utils-*')[0];
+        fs.exists(utils, function(exists) {
+            test.ok(exists);
+        });
+
         fs.exists("tmp/src/theme-0.1.0", function(exists) {
             test.ok(exists);
         });

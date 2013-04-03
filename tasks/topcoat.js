@@ -12,7 +12,7 @@ var fs = require('fs'),
 
 module.exports = function(grunt) {
 
-    grunt.registerMultiTask('topcoat', 'Downloads specified repos for use in the TopDoat build process.', function() {
+    grunt.registerMultiTask('topcoat', 'Downloads specified repos for use in the TopCoat build process.', function() {
         var _ = grunt.util._,
             async = grunt.util.async,
             done = this.async(),
@@ -22,6 +22,7 @@ module.exports = function(grunt) {
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
+            utils = deps.utils || {},
             theme = deps.theme || {};
 
         // Splits the supplied user/repo name so we can use just the repo name
@@ -149,11 +150,6 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            grunt.task.run('unzip:controls');
-            callback();
-        },
-
-        function(callback) {
             // Download theme into srcPath/theme
             if (!_.isEmpty(theme)) {
                 downloadResources(theme, srcPath, callback);
@@ -164,8 +160,15 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            grunt.task.run('unzip:theme');
-            callback();
+            // Download utils into srcPath/utils
+            if (!_.isEmpty(utils)) {
+                var utilsPath = srcPath + "utils/";
+                file.mkdir(utilsPath);
+                downloadResources(utils, utilsPath, callback);
+            } else {
+                callback();
+                grunt.log.writeln("No utils specified");
+            }
         },
 
         function(callback) {
@@ -181,7 +184,7 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            grunt.task.run('unzip:skins');
+            grunt.task.run('unzip');
             callback();
         },
 

@@ -16,6 +16,9 @@
     "skins": {
       "topcoat/button": "0.1.0"
     },
+    "utils": {
+      "topcoat/utils": ""
+    },
     "theme": {
       "topcoat/theme": "0.1.0"
     }
@@ -41,7 +44,8 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "request": "~2.16.6"
+    "request": "~2.16.6",
+    "progress": "~0.1.0"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "0.1.1rc6",
