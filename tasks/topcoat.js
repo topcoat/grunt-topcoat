@@ -135,7 +135,7 @@ module.exports = function(grunt) {
 
         // Download controls, theme and skins into specified folders for the
         // build
-        async.series([
+        async.parallel([
 
         function(callback) {
             // Download controls into srcPath/controls/
@@ -191,10 +191,8 @@ module.exports = function(grunt) {
         function(callback) {
             grunt.task.run('clean:zip');
             callback();
-        },
+        }
 
-        function() {
-            done();
-        }]);
+        ], done);
     });
 };
