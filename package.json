@@ -48,11 +48,11 @@
     "progress": "~0.1.0"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "0.1.1rc6",
-    "grunt-contrib-clean": "0.4.0rc6",
-    "grunt-contrib-nodeunit": "0.1.2rc6",
-    "grunt": "0.4.0rc6",
-    "grunt-zip": "~0.7.0"
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-nodeunit": "~0.1.2",
+    "grunt": "~0.4.1",
+    "grunt-zip": "~0.9.0"
   },
   "keywords": [
     "gruntplugin"
