@@ -8,7 +8,8 @@
 var fs = require('fs'),
     path = require('path'),
     request = require('request'),
-    ProgressBar = require('progress');
+    exec = require('child_process').exec,
+    debug = require('debug')('build');
 
 module.exports = function(grunt) {
 
@@ -18,7 +19,12 @@ module.exports = function(grunt) {
             done = this.async(),
             file = grunt.file,
             options = this.options(),
+            hostname = options.hostname || "https://github.com/",
             srcPath = options.srcPath || "src/",
+            controlsPath = options.controlsPath || srcPath + "controls/",
+            skinsPath = options.skinsPath || srcPath + "skins/",
+            themePath = options.themePath || srcPath + "theme/",
+            utilsPath = options.utilsPath || srcPath + "utils/",
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
@@ -57,21 +63,18 @@ module.exports = function(grunt) {
         // tag:  tag number of git tag to use
         // https://github.com/user/repo/archive/0.1.0.zip
         var getTagArchiveURL = function(repo, tag) {
-                var prefix = "https://github.com/",
+                var prefix = hostname,
                     suffix = "/archive/",
                     ext = ".zip";
 
                 return prefix + repo + suffix + tag + ext;
             };
 
-        // Returns a download url for the current master of a git repo
+        // Returns a clone url for the current master of a git repo
         // repo: user/repo unique name of git repo. Ex: topcoat/button
-        // https://api.github.com/repos/user/repo/zipball/dev
-        // api is described here:
-        // http://developer.github.com/v3/repos/contents/#get-archive-link
         var getNightlyArchiveURL = function(repo) {
-                var prefix = "https://api.github.com/repos/",
-                    suffix = "/zipball";
+                var prefix = hostname,
+                    suffix = ".git";
 
                 return prefix + repo + suffix;
             };
@@ -93,21 +96,25 @@ module.exports = function(grunt) {
                     }
                     callback(error, body);
                 });
+            };
 
-                req.on('response', function(res) {
-                    var len = parseInt(res.headers['content-length'], 10);
-
-                    var bar = new ProgressBar('Progress [:bar] :percent :etas', {
-                        complete: '=',
-                        incomplete: ' ',
-                        width: 20,
-                        total: len
+        var shallowClone = function(url, path, callback) {
+                var cmd = "git clone " + url + " --depth 1 " + path,
+                    process = exec(cmd, function(error, stdout, stderr) {
+                        callback(error);
                     });
+            };
 
-                    res.on('data', function(chunk) {
-                        bar.tick(chunk.length);
-                    });
-                });
+        var downloadTag = function(obj, next) {
+                var zipPath = obj.path + obj.name + ".zip";
+                grunt.log.writeln("\nDownloading: " + obj.url + "\nTo => " + zipPath);
+                curl(obj.url, zipPath, next);
+            };
+
+        var downloadNightly = function(obj, next) {
+                var clonePath = obj.path + obj.name;
+                grunt.log.writeln("\nCloning: " + obj.url + "\nTo => " + clonePath);
+                shallowClone(obj.url, clonePath, next);
             };
 
         // Loop over topcoat dependency object and downloads dependecies in
@@ -121,15 +128,19 @@ module.exports = function(grunt) {
                 _.forIn(obj, function(value, key) {
                     var name = getDirectoryName(key);
                     urls.push({
+                        tag: value,
                         name: name,
-                        url: getDownloadURL(key, value)
+                        url: getDownloadURL(key, value),
+                        path: path
                     });
                 });
 
                 async.forEachSeries(urls, function(obj, next) {
-                    var zipPath = path + obj.name + ".zip";
-                    grunt.log.writeln("\nDownloading: " + obj.url + "\nTo => " + zipPath);
-                    curl(obj.url, zipPath, next);
+                    if (obj.tag) {
+                        downloadTag(obj, next);
+                    } else {
+                        downloadNightly(obj, next);
+                    }
                 }, callback);
             };
 
@@ -138,9 +149,7 @@ module.exports = function(grunt) {
         async.parallel([
 
         function(callback) {
-            // Download controls into srcPath/controls/
             if (!_.isEmpty(controls)) {
-                var controlsPath = srcPath + "controls/";
                 file.mkdir(controlsPath);
                 downloadResources(controls, controlsPath, callback);
             } else {
@@ -150,7 +159,6 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            // Download theme into srcPath/theme
             if (!_.isEmpty(theme)) {
                 downloadResources(theme, srcPath, callback);
             } else {
@@ -160,9 +168,7 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            // Download utils into srcPath/utils
             if (!_.isEmpty(utils)) {
-                var utilsPath = srcPath + "utils/";
                 file.mkdir(utilsPath);
                 downloadResources(utils, utilsPath, callback);
             } else {
@@ -172,9 +178,7 @@ module.exports = function(grunt) {
         },
 
         function(callback) {
-            // Download theme into srcPath/skins
             if (!_.isEmpty(skins)) {
-                var skinsPath = srcPath + "skins/";
                 file.mkdir(skinsPath);
                 downloadResources(skins, skinsPath, callback);
             } else {
