@@ -1,7 +1,7 @@
 'use strict';
 
-var grunt = require('grunt');
-var fs    = require('fs');
+var grunt = require('grunt'),
+    fs    = require('fs');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -29,16 +29,11 @@ exports.topcoat = {
             test.ok(exists);
         });
 
-        // This is just a placeholder until we have more controls repos.
-        // I needed to test is downloading more than one repo.
-        // TODO: Update this test once more controls repos are added
-        var buttonBase = grunt.file.expand('tmp/src/controls/topcoat-button-base-*')[0];
-        fs.exists(buttonBase, function(exists) {
+        fs.exists('tmp/src/controls/button-base', function(exists) {
             test.ok(exists);
         });
 
-        var utils = grunt.file.expand('tmp/src/utils/topcoat-utils-*')[0];
-        fs.exists(utils, function(exists) {
+        fs.exists('tmp/src/utils/utils', function(exists) {
             test.ok(exists);
         });
 
