@@ -87,7 +87,8 @@ module.exports = function(grunt) {
         var curl = function(url, path, callback) {
                 var req = request.get({
                     'url': url,
-                    'encoding': 'binary'
+                    'encoding': 'binary',
+                    'headers': {'user-agent': 'topcoat.io'}
                 }, function(error, response, body) {
                     if (!error) {
                         fs.writeFileSync(path, body, 'binary');
@@ -96,6 +97,7 @@ module.exports = function(grunt) {
                     }
                     callback(error, body);
                 });
+                debug("REQUEST:", req);
             };
 
         var shallowClone = function(url, path, callback) {
