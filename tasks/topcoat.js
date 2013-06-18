@@ -19,17 +19,18 @@ module.exports = function(grunt) {
             done = this.async(),
             file = grunt.file,
             options = this.options(),
-            hostname = options.hostname || "https://github.com/",
-            srcPath = options.srcPath || "src/",
-            controlsPath = options.controlsPath || srcPath + "controls/",
-            skinsPath = options.skinsPath || srcPath + "skins/",
-            themePath = options.themePath || srcPath + "theme/",
-            utilsPath = options.utilsPath || srcPath + "utils/",
+            hostname = options.hostname || 'https://github.com/',
+            srcPath = options.srcPath || 'src/',
+            controlsPath = options.controlsPath || srcPath + 'controls/',
+            skinsPath = options.skinsPath || srcPath + 'skins/',
+            themePath = options.themePath || srcPath + 'theme/',
+            utilsPath = options.utilsPath || srcPath + 'utils/',
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
             utils = deps.utils || {},
-            theme = deps.theme || {};
+            theme = deps.theme || {},
+            proxy = options.proxy;
 
         // Splits the supplied user/repo name so we can use just the repo name
         //   for the zip file name.
@@ -88,7 +89,8 @@ module.exports = function(grunt) {
                 var req = request.get({
                     'url': url,
                     'encoding': 'binary',
-                    'headers': {'user-agent': 'topcoat.io'}
+                    'headers': {'user-agent': 'topcoat.io'},
+                    'proxy': proxy
                 }, function(error, response, body) {
                     if (!error) {
                         fs.writeFileSync(path, body, 'binary');

@@ -14,7 +14,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            all: ['Gruntfile.js', 'tasks/*.js', '<%= nodeunit.tests %>', ],
+            all: ['Gruntfile.js', 'tasks/*.js', '<%= nodeunit.all %>', ],
             options: {
                 jshintrc: '.jshintrc',
             },
@@ -31,7 +31,8 @@ module.exports = function(grunt) {
             download: {
                 options: {
                     srcPath: 'tmp/src/',
-                    repos: '<%= pkg.topcoat %>'
+                    repos: '<%= pkg.topcoat %>',
+                    proxy: ''
                 }
             }
         },
@@ -57,7 +58,7 @@ module.exports = function(grunt) {
 
         // Unit tests.
         nodeunit: {
-            tests: ['test/*_test.js'],
+            all: ['test/*.test.js'],
         },
 
     });

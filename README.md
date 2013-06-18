@@ -1,12 +1,21 @@
 grunt-topcoat
 ==================
 
-Install
+<a href="TOC">TOC</a>
+=====================
+
+1. [Install](#install)
+1. [Usage](#usage)
+1. [Options](#options)
+
+<a href="install">Install</a>
 -------
 
 `npm install grunt-topcoat --save-dev`
 
-Usage
+[⇧](#TOC)
+
+<a href="usage">Usage</a>
 -----
 
 Load the npm task in your Gruntfile:
@@ -49,4 +58,19 @@ You should only run this task once to get started.
 After the initial run you only need to run it when you want to update the included repos or their versions.
 You can update the included repos by editing the entries in the topcoat section of package.json and then running this task again.
 
+[⇧](#TOC)
 
+<a href="options">Options</a>
+=======
+
+Options available to pass in from topcoat initconfig block.
+
+* `hostname` defaults to 'https://github.com/'
+* `srcPath` defaults to 'src/'
+* `controlsPath` defaults to srcPath + 'controls/'
+* `skinsPath` defaults to srcPath + 'skins/'
+* `themePath` defaults to srcPath + 'theme/'
+* `utilsPath` defaults to srcPath + 'utils/'
+* `proxy` defaults to ''
+
+[⇧](#TOC)

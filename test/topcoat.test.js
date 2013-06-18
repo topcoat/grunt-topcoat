@@ -1,7 +1,8 @@
 'use strict';
 
 var grunt = require('grunt'),
-    fs    = require('fs');
+    fs    = require('fs'),
+    debug = require('debug')('test');
 
 /*
   ======== A Handy Little Nodeunit Reference ========
@@ -23,27 +24,19 @@ var grunt = require('grunt'),
     test.ifError(value)
 */
 
-exports.topcoat = {
+exports.nodeunit = {
     download: function(test) {
-        fs.exists("tmp/src/controls/button-0.1.0", function(exists) {
-            test.ok(exists);
-        });
+        test.expect(5);
 
-        fs.exists('tmp/src/controls/button-base', function(exists) {
-            test.ok(exists);
-        });
+        test.ok(fs.existsSync('tmp/src/controls/button-0.1.0'));
 
-        fs.exists('tmp/src/utils/utils', function(exists) {
-            test.ok(exists);
-        });
+        test.ok(fs.existsSync('tmp/src/controls/button-base'));
 
-        fs.exists("tmp/src/theme-0.1.0", function(exists) {
-            test.ok(exists);
-        });
+        test.ok(fs.existsSync('tmp/src/utils/utils'));
 
-        fs.exists("tmp/src/skins/button-0.1.0", function(exists) {
-            test.ok(exists);
-        });
+        test.ok(fs.existsSync('tmp/src/theme-0.1.0'));
+
+        test.ok(fs.existsSync('tmp/src/skins/button-0.1.0'));
 
         test.done();
     }
