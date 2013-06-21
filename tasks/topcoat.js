@@ -5,9 +5,11 @@
 
 'use strict';
 
+var proxy = process.env.HTTP_PROXY || process.env.http_proxy || process.env.HTTPS_PROXY ||  process.env.https_proxy;
+
 var fs = require('fs'),
     path = require('path'),
-    request = require('request'),
+    request = require('request').defaults({'proxy' : proxy}),
     exec = require('child_process').exec,
     debug = require('debug')('build');
 
