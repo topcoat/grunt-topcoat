@@ -22,28 +22,31 @@ var fs = require('fs'),
     path = require('path'),
     request = require('request'),
     exec = require('child_process').exec,
-    debug = require('debug')('build');
+    debug = require('debug')('download');
 
 module.exports = function(grunt) {
 
-    grunt.registerMultiTask('topcoat', 'Downloads specified repos for use in the TopCoat build process.', function() {
-        var _ = grunt.util._,
+    grunt.registerMultiTask('download', 'Downloads specified repos for use in the TopCoat build process.', function() {
+        // Handle default options
+        var options = this.options({
+            hostname: 'https://github.com/',
+            srcPath: 'src/'
+        }),
+            _ = grunt.util._,
             async = grunt.util.async,
             done = this.async(),
             file = grunt.file,
-            options = this.options(),
-            hostname = options.hostname || 'https://github.com/',
-            srcPath = options.srcPath || 'src/',
-            controlsPath = options.controlsPath || srcPath + 'controls/',
-            skinsPath = options.skinsPath || srcPath + 'skins/',
-            themePath = options.themePath || srcPath + 'theme/',
-            utilsPath = options.utilsPath || srcPath + 'utils/',
+            controlsPath = options.srcPath + 'controls/',
+            skinsPath = options.srcPath + 'skins/',
+            themePath = options.srcPath + 'theme/',
+            utilsPath = options.srcPath + 'utils/',
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
             utils = deps.utils || {},
-            theme = deps.theme || {},
-            proxy = options.proxy;
+            theme = deps.theme || {};
+
+        debug('OPTIONS:', options);
 
         // Splits the supplied user/repo name so we can use just the repo name
         //   for the zip file name.
@@ -77,7 +80,7 @@ module.exports = function(grunt) {
         // tag:  tag number of git tag to use
         // https://github.com/user/repo/archive/0.1.0.zip
         var getTagArchiveURL = function(repo, tag) {
-                var prefix = hostname,
+                var prefix = options.hostname,
                     suffix = "/archive/",
                     ext = ".zip";
 
@@ -87,7 +90,7 @@ module.exports = function(grunt) {
         // Returns a clone url for the current master of a git repo
         // repo: user/repo unique name of git repo. Ex: topcoat/button
         var getNightlyArchiveURL = function(repo) {
-                var prefix = hostname,
+                var prefix = options.hostname,
                     suffix = ".git";
 
                 return prefix + repo + suffix;
@@ -102,8 +105,11 @@ module.exports = function(grunt) {
                 var req = request.get({
                     'url': url,
                     'encoding': 'binary',
-                    'headers': {'user-agent': 'topcoat.io'},
-                    'proxy': proxy }, function(error, response, body) {
+                    'headers': {
+                        'user-agent': 'topcoat.io'
+                    },
+                    'proxy': options.proxy
+                }, function(error, response, body) {
                     if (!error) {
                         fs.writeFileSync(path, body, 'binary');
                     } else {
@@ -114,6 +120,11 @@ module.exports = function(grunt) {
                 debug("REQUEST:", req);
             };
 
+        // Makes a git shallow clone to omit uneeded
+        //  git history
+        //  url: url to clone from
+        //  path: path to clone into
+        //  callback: function to call on completion
         var shallowClone = function(url, path, callback) {
                 var cmd = "git clone " + url + " --depth 1 " + path,
                     process = exec(cmd, function(error, stdout, stderr) {
@@ -121,12 +132,22 @@ module.exports = function(grunt) {
                     });
             };
 
+        // Downloads a tagged version of a repo from github as a zip file
+        // obj: configuration object containing
+        //      path: path to save zip to
+        //      name: name to name the zip archive
+        // next: callback function to call upon completion
         var downloadTag = function(obj, next) {
                 var zipPath = obj.path + obj.name + ".zip";
                 grunt.log.writeln("\nDownloading: " + obj.url + "\nTo => " + zipPath);
                 curl(obj.url, zipPath, next);
             };
 
+        // Fetches a clone of the current, untagged, version of a repo
+        // obj: configuration object containing
+        //      path: path of repo to clone
+        //      name: name to name the cloned directory
+        // *Calls shallowClone internally
         var downloadNightly = function(obj, next) {
                 var clonePath = obj.path + obj.name;
                 grunt.log.writeln("\nCloning: " + obj.url + "\nTo => " + clonePath);
@@ -176,7 +197,7 @@ module.exports = function(grunt) {
 
         function(callback) {
             if (!_.isEmpty(theme)) {
-                downloadResources(theme, srcPath, callback);
+                downloadResources(theme, options.srcPath, callback);
             } else {
                 callback();
                 grunt.log.writeln("No theme specified");
@@ -214,5 +235,6 @@ module.exports = function(grunt) {
         }
 
         ], done);
+
     });
 };
