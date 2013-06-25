@@ -37,45 +37,33 @@ module.exports = function(grunt) {
         },
 
         // Configuration to be run (and then tested).
-        download: {
+        topcoat: {
             download: {
                 options: {
-                    srcPath: 'tmp/src/',
                     repos: '<%= pkg.topcoat %>',
-                    proxy: ''
+                    src: 'tmp/src/',
+                    controlsPath: '<%= topcoat.src %>controls/',
+                    skinsPath: '<%= topcoat.src %>skins/',
+                    themePath: '<%= topcoat.src %>theme/',
+                    utilsPath: '<%= topcoat.src %>utils/',
+                    proxy: '',
+                    download: true,
+                    compile: false
                 }
-            }
-        },
-
-        compile: {
+            },
             compile: {
                 options: {
-                    srcPath: 'tmp/src/',
-                    releasePath: 'tmp/css/'
+                    src: 'tmp/src/',
+                    controlsPath: '<%= topcoat.src %>controls/',
+                    skinsPath: '<%= topcoat.src %>skins/',
+                    themePath: '<%= topcoat.src %>theme*/',
+                    utilsPath: '<%= topcoat.src %>utils/',
+                    themePrefix: 'theme-',
+                    download: false,
+                    compile: true,
+                    releasePath: 'css/'
                 }
             }
-        },
-
-        stylus: {
-            compile: {
-                    "options": {
-                        "paths": [
-                            "tmp/src/controls/button-base/src/mixins",
-                            "tmp/src/controls/input-base-0.1.0/src/mixins",
-                            "tmp/src/utils/utils/src/mixins",
-                            "tmp/src/theme-0.4.0/src"
-                            ],
-                        "import": [
-                            "theme-topcoat-desktop-dark",
-                            "nib"
-                        ],
-                        "compress": false
-                    },
-                    "files": [{
-                        "src": ["tmp/src/**/src/includes/*.styl", "tmp/src/skins/**/src/*.styl"],
-                        "dest": "tmp/css/topcoat-desktop-dark.css"
-                    }]
-                }
         },
 
         unzip: {
@@ -98,7 +86,11 @@ module.exports = function(grunt) {
         },
 
         // Unit tests.
-        nodeunit: {
+        simplemocha: {
+            options: {
+                ui: 'bdd',
+                reporter: 'Nyan'
+            },
             all: ['test/*.test.js'],
         },
 
@@ -108,15 +100,15 @@ module.exports = function(grunt) {
     grunt.loadTasks('tasks');
 
     // These plugins provide necessary tasks.
+    grunt.loadNpmTasks('grunt-simple-mocha');
     grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-contrib-nodeunit');
     grunt.loadNpmTasks('grunt-zip');
 
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this
     // plugin's task(s), then test the result.
-    grunt.registerTask('test', ['clean', 'download', 'compile', 'nodeunit']);
+    grunt.registerTask('test', ['clean', 'download', 'compile', 'mocha']);
 
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint', 'test']);
