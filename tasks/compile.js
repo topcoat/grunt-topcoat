@@ -28,18 +28,17 @@ module.exports = function(grunt) {
         // Handle default options
         var options = this.options({
             srcPath: 'src/',
+            controlsPath: 'src/controls/',
+            skinsPath: 'src/skins/',
+            themePath: 'src/theme*/',
+            themePrefix: 'theme-',
+            utilsPath: 'src/utils/',
             releasePath: 'css/'
-        }),
-            //Externalize these paths?
-            controlsPath = options.srcPath + 'controls/',
-            skinsPath = options.srcPath + 'skins/',
-            themePath = options.srcPath + 'theme*/',
-            utilsPath = options.srcPath + 'utils/';
-
+       });
 
         var getCompileData = function() {
                 var compileData = {},
-                    themeFiles = grunt.file.expand(options.srcPath + '**/src/theme-*.styl'),
+                    themeFiles = grunt.file.expand(options.srcPath + '**/src/' + options.themePrefix + '*.styl'),
                     stylusPathData = getStylusPathData();
 
                 grunt.util._.forEach(themeFiles, function(theme) {
@@ -57,16 +56,16 @@ module.exports = function(grunt) {
             };
 
         var getStylusPathData = function() {
-                var controlsFilesPath = grunt.file.expand(controlsPath + '**/src/mixins'),
-                    utilsFilesPath = grunt.file.expand(utilsPath + '**/src/mixins'),
-                    themeFilesPath = grunt.file.expand(themePath + '**/src');
+                var controlsFilesPath = grunt.file.expand(options.controlsPath + '**/src/mixins'),
+                    utilsFilesPath = grunt.file.expand(options.utilsPath + '**/src/mixins'),
+                    themeFilesPath = grunt.file.expand(options.themePath + '**/src');
 
                 return controlsFilesPath.concat(utilsFilesPath, themeFilesPath);
             };
 
         var getStylusImportData = function(theme) {
-                var mixinFiles = grunt.file.expand(controlsPath + '**/src/mixins/*.styl'),
-                    utilFiles = grunt.file.expand(utilsPath + '**/src/mixins/*.styl'),
+                var mixinFiles = grunt.file.expand(options.controlsPath + '**/src/mixins/*.styl'),
+                    utilFiles = grunt.file.expand(options.utilsPath + '**/src/mixins/*.styl'),
                     importData = mixinFiles.concat([theme, 'nib']);
 
                     importData.forEach(function(element, index, array) {
@@ -79,7 +78,7 @@ module.exports = function(grunt) {
         var getStylusFilesData = function(theme) {
                 var fileData = [],
                     releasePath = options.releasePath,
-                    skinFiles = skinsPath + '**/src/*.styl',
+                    skinFiles = options.skinsPath + '**/src/*.styl',
                     includes = options.srcPath + '**/src/includes/*.styl',
                     fileName = path.basename(theme).split('.styl').join('.css');
 

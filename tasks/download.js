@@ -27,19 +27,21 @@ var fs = require('fs'),
 module.exports = function(grunt) {
 
     grunt.registerMultiTask('download', 'Downloads specified repos for use in the TopCoat build process.', function() {
+
         // Handle default options
         var options = this.options({
             hostname: 'https://github.com/',
-            srcPath: 'src/'
+            srcPath: 'src/',
+            controlsPath: 'src/controls/',
+            skinsPath: 'src/skins/',
+            themePath: 'src/theme/',
+            utilsPath: 'src/utils/',
+            proxy: ''
         }),
             _ = grunt.util._,
             async = grunt.util.async,
             done = this.async(),
             file = grunt.file,
-            controlsPath = options.srcPath + 'controls/',
-            skinsPath = options.srcPath + 'skins/',
-            themePath = options.srcPath + 'theme/',
-            utilsPath = options.srcPath + 'utils/',
             deps = options.repos,
             controls = deps.controls || {},
             skins = deps.skins || {},
@@ -187,8 +189,8 @@ module.exports = function(grunt) {
 
         function(callback) {
             if (!_.isEmpty(controls)) {
-                file.mkdir(controlsPath);
-                downloadResources(controls, controlsPath, callback);
+                file.mkdir(options.controlsPath);
+                downloadResources(controls, options.controlsPath, callback);
             } else {
                 callback();
                 grunt.log.writeln("No controls specified");
@@ -206,8 +208,8 @@ module.exports = function(grunt) {
 
         function(callback) {
             if (!_.isEmpty(utils)) {
-                file.mkdir(utilsPath);
-                downloadResources(utils, utilsPath, callback);
+                file.mkdir(options.utilsPath);
+                downloadResources(utils, options.utilsPath, callback);
             } else {
                 callback();
                 grunt.log.writeln("No utils specified");
@@ -216,8 +218,8 @@ module.exports = function(grunt) {
 
         function(callback) {
             if (!_.isEmpty(skins)) {
-                file.mkdir(skinsPath);
-                downloadResources(skins, skinsPath, callback);
+                file.mkdir(options.skinsPath);
+                downloadResources(skins, options.skinsPath, callback);
             } else {
                 callback();
                 grunt.log.writeln("No skins specified");

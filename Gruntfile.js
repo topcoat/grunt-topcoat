@@ -24,7 +24,7 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            all: ['Gruntfile.js', 'tasks/*.js', '<%= nodeunit.all %>', ],
+            all: ['Gruntfile.js', 'tasks/*.js', '<%= simplemocha.all %>', ],
             options: {
                 jshintrc: '.jshintrc',
             },
@@ -38,14 +38,17 @@ module.exports = function(grunt) {
 
         // Configuration to be run (and then tested).
         topcoat: {
+            options: {
+                repos: '<%= pkg.topcoat %>',
+                src: 'tmp/src/',
+                controlsPath: '<%= topcoat.options.src %>controls/',
+                skinsPath: '<%= topcoat.options.src %>skins/',
+                themePath: '<%= topcoat.options.src %>theme/',
+                utilsPath: '<%= topcoat.options.src %>utils/',
+            },
             download: {
                 options: {
-                    repos: '<%= pkg.topcoat %>',
-                    src: 'tmp/src/',
-                    controlsPath: '<%= topcoat.src %>controls/',
-                    skinsPath: '<%= topcoat.src %>skins/',
-                    themePath: '<%= topcoat.src %>theme/',
-                    utilsPath: '<%= topcoat.src %>utils/',
+                    hostname: 'https://github.com/',
                     proxy: '',
                     download: true,
                     compile: false
@@ -53,11 +56,6 @@ module.exports = function(grunt) {
             },
             compile: {
                 options: {
-                    src: 'tmp/src/',
-                    controlsPath: '<%= topcoat.src %>controls/',
-                    skinsPath: '<%= topcoat.src %>skins/',
-                    themePath: '<%= topcoat.src %>theme*/',
-                    utilsPath: '<%= topcoat.src %>utils/',
                     themePrefix: 'theme-',
                     download: false,
                     compile: true,
@@ -108,7 +106,9 @@ module.exports = function(grunt) {
 
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this
     // plugin's task(s), then test the result.
-    grunt.registerTask('test', ['clean', 'download', 'compile', 'simplemocha']);
+    grunt.registerTask('test', ['clean', 'topcoat', 'simplemocha']);
+    //grunt.registerTask('download', ['clean', 'topcoat:download', 'simplemocha']);
+    //grunt.registerTask('compile', ['clean', 'topcoat:compile', 'simplemocha']);
 
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint', 'test']);
