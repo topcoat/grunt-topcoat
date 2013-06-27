@@ -20,18 +20,32 @@
 
 'use strict';
 
-var grunt  = require('grunt'),
+var grunt = require('grunt'),
     assert = require('assert'),
-    fs     = require('fs'),
-    debug  = require('debug')('test');
+    fs = require('fs'),
+    debug = require('debug')('test'),
+    compile = require('../tasks/lib/compile').init(grunt),
+    compileOptions = {};
 
+compileOptions.themeFiles = ['src/theme/src/theme-fake-dark.style'];
+compileOptions.controlsFilesPath = ['src/controls/button-base/src/mixins'];
+compileOptions.utilsFilesPath = ['src/utils/utils/src/mixins'];
+compileOptions.themeFilesPath = ['src/theme/src'];
+compileOptions.mixinFiles = ['src/controls/button-base/src/mixins/button-mixin.styl'];
+compileOptions.utilFiles = ['src/utils/utils/src/mixins/utils.styl'];
+compileOptions.releasePath = 'css/';
+compileOptions.skinsPath = 'src/skins/';
+compileOptions.srcPath = 'src/';
+compileOptions.themePrefix = 'theme-';
 
 describe('compile', function() {
-    it('should create the correct output css files', function() {
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-desktop-light.css'));
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-desktop-dark.css'));
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-mobile-light.css'));
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-mobile-dark.css'));
-    });
-});
+    describe('getCompileData', function() {
+        it('should return the correct compile data', function() {
+            var expected = {};
 
+            debug('OPTIONS:', compileOptions);
+            assert.equals(compile.getCompileData(compileOptions), expected);
+        });
+    });
+
+});

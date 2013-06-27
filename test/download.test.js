@@ -22,17 +22,66 @@
 
 var grunt = require('grunt'),
     assert = require('assert'),
-    fs    = require('fs'),
-    debug = require('debug')('test');
+    fs = require('fs'),
+    debug = require('debug')('test'),
+    download = require('../tasks/lib/download').init(grunt);
 
 
 describe('download', function() {
-    it('should create the correct output css files', function() {
-        assert.equal(true, fs.existsSync('tmp/src/controls/input-base-0.1.0'));
-        assert.equal(true, fs.existsSync('tmp/src/controls/button-base'));
-        assert.equal(true, fs.existsSync('tmp/src/utils/utils'));
-        assert.equal(true, fs.existsSync('tmp/src/theme-0.4.0'));
-        assert.equal(true, fs.existsSync('tmp/src/skins/button'));
-    });
-});
 
+    describe('getDirectoryName', function() {
+        it('should return correct directory name', function() {
+            var repo = 'topcoat/button',
+                expected = 'button',
+                actual = download.getDirectoryName(repo);
+            assert.equal(actual, expected);
+        });
+    });
+
+    describe('getDownloadURL', function() {
+        it('should return correct URL when tag is supplied', function() {
+            var hostname = 'https://github.com/',
+                repo = 'topcoat/button',
+                tag = '0.1.0',
+                expected = 'https://github.com/topcoat/button/archive/0.1.0.zip',
+                actual = download.getDownloadURL(hostname, repo, tag);
+
+            assert.equal(actual, expected);
+        });
+
+        it('should return correct URL when no tag is supplied', function() {
+            var hostname = 'https://github.com/',
+                repo = 'topcoat/button',
+                tag = '',
+                expected = 'https://github.com/topcoat/button.git',
+                actual = download.getDownloadURL(hostname, repo, tag);
+
+            assert.equal(actual, expected);
+        });
+    });
+
+    describe('getTagArchiveURL', function() {
+        it('should return correct URL', function() {
+            var hostname = 'https://github.com/',
+                repo = 'topcoat/button',
+                tag = '0.1.0',
+                expected = 'https://github.com/topcoat/button/archive/0.1.0.zip',
+                actual = download.getTagArchiveURL(hostname, repo, tag);
+
+            assert.equal(actual, expected);
+        });
+    });
+
+    describe('getNightlyArchiveURL', function() {
+        it('should return correct URL', function() {
+            var hostname = 'https://github.com/',
+                repo = 'topcoat/button',
+                tag = '',
+                expected = 'https://github.com/topcoat/button.git',
+                actual = download.getDownloadURL(hostname, repo, tag);
+
+            assert.equal(actual, expected);
+        });
+    });
+
+});

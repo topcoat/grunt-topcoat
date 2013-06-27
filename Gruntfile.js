@@ -64,6 +64,12 @@ module.exports = function(grunt) {
             }
         },
 
+        download: {
+        },
+
+        compile: {
+        },
+
         unzip: {
             controls: {
                 src: "tmp/src/controls/*.zip",
@@ -99,7 +105,6 @@ module.exports = function(grunt) {
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-simple-mocha');
-    grunt.loadNpmTasks('grunt-contrib-stylus');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-zip');
