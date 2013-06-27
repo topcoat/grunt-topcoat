@@ -86,8 +86,6 @@ exports.init = function(grunt) {
             return fileData;
         };
 
-    debug('CONFIG DATA:', JSON.stringify(getCompileData(), null, 2));
-
     exports.getCompileData = getCompileData;
     exports.getStylusPathData = getStylusPathData;
     exports.getStylusImportData = getStylusImportData;

@@ -39,6 +39,7 @@ compileOptions.srcPath = 'src/';
 compileOptions.themePrefix = 'theme-';
 
 describe('compile', function() {
+
     describe('getCompileData', function() {
         it('should return the correct compile data', function() {
             var expected = {};
