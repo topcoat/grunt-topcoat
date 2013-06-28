@@ -31,7 +31,7 @@ describe('topcoat', function() {
         assert.equal(true, fs.existsSync('tmp/src/controls/input-base-0.1.0'));
         assert.equal(true, fs.existsSync('tmp/src/controls/button-base'));
         assert.equal(true, fs.existsSync('tmp/src/utils/utils'));
-        assert.equal(true, fs.existsSync('tmp/src/theme-0.4.0'));
+        assert.equal(true, fs.existsSync('tmp/src/theme/theme-0.4.0'));
         assert.equal(true, fs.existsSync('tmp/src/skins/button'));
     });
 

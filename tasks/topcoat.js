@@ -10,13 +10,13 @@ module.exports = function(grunt) {
 
         var options = this.options({
             hostname: 'https://github.com/',
-            proxy: '',
-            srcPath: 'src/',
-            controlsPath: 'src/controls/',
-            skinsPath: 'src/skins/',
-            themePath: 'src/theme*/',
-            themePrefix: 'theme-',
-            utilsPath: 'src/utils/',
+            proxy: null,
+            srcPath: 'src',
+            controlsPath: 'src/controls',
+            skinsPath: 'src/skins',
+            themePath: 'src/theme',
+            themePrefix: 'theme',
+            utilsPath: 'src/utils',
             releasePath: 'css/',
             platforms: ['webkit', 'moz', 'o', 'ms', 'official'],
             download: true,
@@ -45,14 +45,14 @@ module.exports = function(grunt) {
                     urls.push({
                         tag: value,
                         name: name,
-                        url: download.getDownloadURL(key, value),
+                        url: download.getDownloadURL(options.hostname, key, value),
                         path: path
                     });
                 });
 
                 async.forEachSeries(urls, function(obj, next) {
                     if (obj.tag) {
-                        download.downloadTag(obj, next);
+                        download.downloadTag(obj, options.proxy, next);
                     } else {
                         download.downloadNightly(obj, next);
                     }
@@ -78,7 +78,8 @@ module.exports = function(grunt) {
 
             function(callback) {
                 if (!_.isEmpty(theme)) {
-                    downloadResources(theme, options.srcPath, callback);
+                    file.mkdir(options.themePath);
+                    downloadResources(theme, options.themePath, callback);
                 } else {
                     callback();
                     grunt.log.writeln("No theme specified");
@@ -120,24 +121,32 @@ module.exports = function(grunt) {
 
         //Compile
         if (options.compile) {
+            debug('COMPILE');
             var compileOptions = {};
             //FIXME: This file expansion BS is gross.
-            // Need to make a pull request to grunt-contrib-stylus to accept
-            // blobs
-            compileOptions.themeFiles = grunt.file.expand(options.srcPath + '**/src/' + options.themePrefix + '*.styl');
-
-            compileOptions.controlsFilesPath = grunt.file.expand(options.controlsPath + '**/src/mixins');
-            compileOptions.utilsFilesPath = grunt.file.expand(options.utilsPath + '**/src/mixins');
-            compileOptions.themeFilesPath = grunt.file.expand(options.themePath + '**/src');
-            compileOptions.mixinFiles = grunt.file.expand(options.controlsPath + '**/src/mixins/*.styl');
-            compileOptions.utilFiles = grunt.file.expand(options.utilsPath + '**/src/mixins/*.styl');
+            // Need to make a pull request to grunt-contrib-stylus to
+            // expand file *s
+            compileOptions.themeFiles = grunt.file.expand(options.themePath + '/**/src/' + options.themePrefix + '-' + '*.styl');
+            compileOptions.controlsFilesPath = grunt.file.expand(options.controlsPath + '/**/src/mixins');
+            compileOptions.utilsFilesPath = grunt.file.expand(options.utilsPath + '/**/src/mixins');
+            compileOptions.themeFilesPath = grunt.file.expand(options.themePath + '/**/src');
+            compileOptions.mixinFiles = grunt.file.expand(options.controlsPath + '/**/src/mixins/*.styl');
+            compileOptions.utilFiles = grunt.file.expand(options.utilsPath + '/**/src/mixins/*.styl');
             compileOptions.releasePath = options.releasePath;
             compileOptions.skinsPath = options.skinsPath;
             compileOptions.srcPath = options.srcPath;
             compileOptions.themePrefix = options.themePrefix;
 
+
+            debug('COMPILE OPTIONS:', compileOptions);
+            debug('COMPILE DATA:', JSON.stringify(compile.getCompileData(compileOptions), null, 4));
+
+            var config = compile.getCompileData(compileOptions);
+
+            done();
+
             grunt.loadNpmTasks('grunt-contrib-stylus');
-            grunt.config('stylus', compile.getCompileData(compileOptions));
+            grunt.config('stylus', config);
             grunt.task.run('stylus');
         }
 

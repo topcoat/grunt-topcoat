@@ -91,6 +91,8 @@ exports.init = function(grunt) {
             } else {
                 downloadURL = getNightlyArchiveURL(hostname, repo);
             }
+
+            debug('DOWNLOAD URL:', downloadURL);
             return downloadURL;
         };
 
@@ -122,10 +124,10 @@ exports.init = function(grunt) {
     //      path: path to save zip to
     //      name: name to name the zip archive
     // next: callback function to call upon completion
-    var downloadTag = function(obj, next) {
-            var zipPath = obj.path + obj.name + ".zip";
+    var downloadTag = function(obj, proxy, next) {
+            var zipPath = obj.path + '/' + obj.name + ".zip";
             grunt.log.writeln("\nDownloading: " + obj.url + "\nTo => " + zipPath);
-            curl(obj.url, zipPath, next);
+            curl(obj.url, zipPath, proxy, next);
         };
 
     // Fetches a clone of the current, untagged, version of a repo
@@ -134,7 +136,7 @@ exports.init = function(grunt) {
     //      name: name to name the cloned directory
     // *Calls shallowClone internally
     var downloadNightly = function(obj, next) {
-            var clonePath = obj.path + obj.name;
+            var clonePath = obj.path + '/' + obj.name;
             grunt.log.writeln("\nCloning: " + obj.url + "\nTo => " + clonePath);
             shallowClone(obj.url, clonePath, next);
         };

@@ -24,7 +24,11 @@ module.exports = function(grunt) {
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
-            all: ['Gruntfile.js', 'tasks/*.js', '<%= simplemocha.all %>', ],
+            all: [
+                'Gruntfile.js',
+                'tasks/*.js',
+                '<%= simplemocha.all %>'
+                ],
             options: {
                 jshintrc: '.jshintrc',
             },
@@ -33,18 +37,23 @@ module.exports = function(grunt) {
         // Before generating any new files, remove any previously-created files.
         clean: {
             tests: ['tmp'],
-            zip: ['tmp/src/*.zip', 'tmp/src/controls/*.zip', 'tmp/src/utils/*.zip', 'tmp/src/skins/*.zip']
+            zip: [
+                'tmp/src/*.zip',
+                'tmp/src/controls/*.zip',
+                'tmp/src/utils/*.zip',
+                'tmp/src/skins/*.zip'
+                ]
         },
 
         // Configuration to be run (and then tested).
         topcoat: {
             options: {
                 repos: '<%= pkg.topcoat %>',
-                src: 'tmp/src/',
-                controlsPath: '<%= topcoat.options.src %>controls/',
-                skinsPath: '<%= topcoat.options.src %>skins/',
-                themePath: '<%= topcoat.options.src %>theme/',
-                utilsPath: '<%= topcoat.options.src %>utils/',
+                src: 'tmp/src',
+                controlsPath: '<%= topcoat.options.src %>/controls',
+                skinsPath: '<%= topcoat.options.src %>/skins',
+                themePath: '<%= topcoat.options.src %>/theme',
+                utilsPath: '<%= topcoat.options.src %>/utils',
             },
             download: {
                 options: {
@@ -56,19 +65,17 @@ module.exports = function(grunt) {
             },
             compile: {
                 options: {
-                    themePrefix: 'theme-',
+                    themePrefix: 'theme',
                     download: false,
                     compile: true,
-                    releasePath: 'css/'
+                    releasePath: 'tmp/css'
                 }
             }
         },
 
-        download: {
-        },
+        download: {},
 
-        compile: {
-        },
+        compile: {},
 
         unzip: {
             controls: {
@@ -76,8 +83,8 @@ module.exports = function(grunt) {
                 dest: "tmp/src/controls"
             },
             theme: {
-                src: "tmp/src/*.zip",
-                dest: "tmp/src/"
+                src: "tmp/src/theme/*.zip",
+                dest: "tmp/src/theme"
             },
             utils: {
                 src: "tmp/src/utils/*.zip",
@@ -114,7 +121,6 @@ module.exports = function(grunt) {
     grunt.registerTask('test', ['clean', 'topcoat', 'simplemocha']);
     //grunt.registerTask('download', ['clean', 'topcoat:download', 'simplemocha']);
     //grunt.registerTask('compile', ['clean', 'topcoat:compile', 'simplemocha']);
-
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint', 'test']);
 
