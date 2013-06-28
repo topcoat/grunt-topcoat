@@ -48,7 +48,8 @@ module.exports = function(grunt) {
             controls = deps.controls || {},
             skins = deps.skins || {},
             utils = deps.utils || {},
-            theme = deps.theme || {};
+            theme = deps.theme || {},
+            compileOptions = {};
 
         // Loop over topcoat dependency object and downloads dependecies in
         // order.
@@ -140,7 +141,6 @@ module.exports = function(grunt) {
         //Compile
         if (options.compile) {
             debug('COMPILE');
-            var compileOptions = {};
             //FIXME: This file expansion BS is gross.
             // Need to make a pull request to grunt-contrib-stylus to
             // expand file *s
@@ -159,12 +159,10 @@ module.exports = function(grunt) {
             debug('COMPILE OPTIONS:', compileOptions);
             debug('COMPILE DATA:', JSON.stringify(compile.getCompileData(compileOptions), null, 4));
 
-            var config = compile.getCompileData(compileOptions);
-
             done();
 
             grunt.loadNpmTasks('grunt-contrib-stylus');
-            grunt.config('stylus', config);
+            grunt.config('stylus', compile.getCompileData(compileOptions));
             grunt.task.run('stylus');
         }
 
