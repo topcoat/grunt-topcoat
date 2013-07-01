@@ -73,10 +73,6 @@ module.exports = function(grunt) {
             }
         },
 
-        download: {},
-
-        compile: {},
-
         unzip: {
             controls: {
                 src: "tmp/src/controls/*.zip",
@@ -119,8 +115,7 @@ module.exports = function(grunt) {
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this
     // plugin's task(s), then test the result.
     grunt.registerTask('test', ['clean', 'topcoat', 'simplemocha']);
-    //grunt.registerTask('download', ['clean', 'topcoat:download', 'simplemocha']);
-    //grunt.registerTask('compile', ['clean', 'topcoat:compile', 'simplemocha']);
+
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint', 'test']);
 

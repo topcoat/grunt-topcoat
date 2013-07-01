@@ -85,55 +85,55 @@ module.exports = function(grunt) {
             // build
             async.parallel([
 
-            function(callback) {
-                if (!_.isEmpty(controls)) {
-                    file.mkdir(options.controlsPath);
-                    downloadResources(controls, options.controlsPath, callback);
-                } else {
+                function(callback) {
+                    if (!_.isEmpty(controls)) {
+                        file.mkdir(options.controlsPath);
+                        downloadResources(controls, options.controlsPath, callback);
+                    } else {
+                        callback();
+                        grunt.log.writeln("No controls specified");
+                    }
+                },
+
+                function(callback) {
+                    if (!_.isEmpty(theme)) {
+                        file.mkdir(options.themePath);
+                        downloadResources(theme, options.themePath, callback);
+                    } else {
+                        callback();
+                        grunt.log.writeln("No theme specified");
+                    }
+                },
+
+                function(callback) {
+                    if (!_.isEmpty(utils)) {
+                        file.mkdir(options.utilsPath);
+                        downloadResources(utils, options.utilsPath, callback);
+                    } else {
+                        callback();
+                        grunt.log.writeln("No utils specified");
+                    }
+                },
+
+                function(callback) {
+                    if (!_.isEmpty(skins)) {
+                        file.mkdir(options.skinsPath);
+                        downloadResources(skins, options.skinsPath, callback);
+                    } else {
+                        callback();
+                        grunt.log.writeln("No skins specified");
+                    }
+                },
+
+                function(callback) {
+                    grunt.task.run('unzip');
                     callback();
-                    grunt.log.writeln("No controls specified");
-                }
-            },
+                },
 
-            function(callback) {
-                if (!_.isEmpty(theme)) {
-                    file.mkdir(options.themePath);
-                    downloadResources(theme, options.themePath, callback);
-                } else {
+                function(callback) {
+                    grunt.task.run('clean:zip');
                     callback();
-                    grunt.log.writeln("No theme specified");
                 }
-            },
-
-            function(callback) {
-                if (!_.isEmpty(utils)) {
-                    file.mkdir(options.utilsPath);
-                    downloadResources(utils, options.utilsPath, callback);
-                } else {
-                    callback();
-                    grunt.log.writeln("No utils specified");
-                }
-            },
-
-            function(callback) {
-                if (!_.isEmpty(skins)) {
-                    file.mkdir(options.skinsPath);
-                    downloadResources(skins, options.skinsPath, callback);
-                } else {
-                    callback();
-                    grunt.log.writeln("No skins specified");
-                }
-            },
-
-            function(callback) {
-                grunt.task.run('unzip');
-                callback();
-            },
-
-            function(callback) {
-                grunt.task.run('clean:zip');
-                callback();
-            }
 
             ], done);
         }
