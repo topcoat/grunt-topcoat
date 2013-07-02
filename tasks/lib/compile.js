@@ -19,86 +19,93 @@
 'use strict';
 
 var path = require('path'),
-    debug = require('debug')('compile');
+	debug = require('debug')('compile')
+	_default = {
+		options: {
+			paths: ['src/mixins']
+		},
+		files: ['src/*.styl']
+	}
+	;
 
 exports.init = function(grunt) {
 
-    var exports = {};
+	var exports = {};
 
-    // Returns complete configuration object for rendering final output css
-    // options: configuration options
-    var getCompileData = function(options) {
-            var compileData = {},
-                pathData = getPathData(options);
+	// Returns complete configuration object for rendering final output css
+	// options: configuration options
+	var getCompileData = function(options) {
+			var compileData = {},
+				pathData = getPathData(options);
 
-            // Generates a unique compile configuration object
-            // for each theme- variation file you include in your theme project
-            grunt.util._.forEach(options.themeFiles, function(theme) {
-                compileData[theme] = {
-                    options: {
-                        paths: pathData,
-                        import: getImportData(theme, options),
-                        compress: false
-                    },
-                    files: getFilesData(theme, options)
-                };
+			// Generates a unique compile configuration object
+			// for each theme- variation file you include in your theme project
+			grunt.util._.forEach(options.themeFiles, function(theme) {
+				compileData[theme] = {
+					options: {
+						paths: pathData,
+						import: getImportData(theme, options),
+						compress: false
+					},
+					files: getFilesData(theme, options)
+				};
 
-            });
+			});
 
-            return compileData;
-        };
+			return !Object.keys(compileData).length ? _default : compileData;
+		};
 
-    // Returns the paths to look in for imported files
-    // options: configuration object
-    var getPathData = function(options) {
-            var pathData = [].concat(
-                    options.controlsFilesPath,
-                    options.utilsFilesPath,
-                    options.themeFilesPath);
+	// Returns the paths to look in for imported files
+	// options: configuration object
+	var getPathData = function(options) {
+			var pathData = [].concat(
+					options.controlsFilesPath,
+					options.utilsFilesPath,
+					options.themeFilesPath);
 
-            return pathData;
-        };
+			return pathData;
+		};
 
-    // Returns an array of file names to import
-    // ( use this for variables )
-    // Works in concert with getPathData
-    // getPathData is the path Ex: src/theme/
-    // getImportData are the found at those paths Ex: theme-mobile-dark.styl
-    var getImportData = function(theme, options) {
-            var importData = [
-                theme,
-                'nib'].concat(options.mixinFiles);
+	// Returns an array of file names to import
+	// ( use this for variables )
+	// Works in concert with getPathData
+	// getPathData is the path Ex: src/theme/
+	// getImportData are the found at those paths Ex: theme-mobile-dark.styl
+	var getImportData = function(theme, options) {
+			var importData = [
+				theme,
+				'nib'].concat(options.mixinFiles);
 
-            importData.forEach(function(element, index, array) {
-                array[index] = path.basename(element);
-            });
+			importData.forEach(function(element, index, array) {
+				array[index] = path.basename(element);
+			});
 
-            return importData;
-        };
+			return importData;
+		};
 
-    var getFilesData = function(theme, options) {
-            var fileData = [],
-                releasePath = options.releasePath,
-                skinFiles = options.skinsPath + '/**/src/*.styl',
-                //TODO: Add platform file.
-                //  write out nib vendor-prefixes variable with chosen platform variables
-                //  in this format:
-                //  vendor-prefixes ?= webkit moz o ms official
-                includes = options.srcPath + '/**/src/includes/*.styl',
-                fileName = path.basename(theme).split('.styl').join('.css');
+	var getFilesData = function(theme, options) {
+			var fileData = [],
+				releasePath = options.releasePath,
+				skinFiles = options.skinsPath + '/**/src/*.styl',
+				//TODO: Add platform file.
+				//  write out nib vendor-prefixes variable with chosen platform variables
+				//  in this format:
+				//  vendor-prefixes ?= webkit moz o ms official
+				includes = options.srcPath + '/**/src/includes/*.styl',
+				fileName = path.basename(theme).split('.styl').join('.css');
 
-            fileData.push({
-                src: [includes, skinFiles],
-                dest: releasePath + '/' + fileName.replace(options.themePrefix + '-', '')
-            });
+			fileData.push({
+				src: [includes, skinFiles],
+				dest: releasePath + '/' + fileName.replace(options.themePrefix + '-', '')
+			});
 
-            return fileData;
-        };
+			return fileData;
+		};
 
-    exports.getCompileData = getCompileData;
-    exports.getPathData = getPathData;
-    exports.getImportData = getImportData;
-    exports.getFilesData = getFilesData;
+	exports.getCompileData = getCompileData;
+	exports.getPathData = getPathData;
+	exports.getImportData = getImportData;
+	exports.getFilesData = getFilesData;
 
-    return exports;
+	return exports;
 };
