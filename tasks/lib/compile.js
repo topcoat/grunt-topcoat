@@ -79,17 +79,17 @@ exports.init = function(grunt) {
     var getFilesData = function(theme, options) {
             var fileData = [],
                 releasePath = options.releasePath,
-                skinFiles = options.skinsPath + '/**/src/*.styl',
+                skinFiles = path.join(options.skinsPath, '/**/src/*.styl'),
                 //TODO: Add platform file.
                 //  write out nib vendor-prefixes variable with chosen platform variables
                 //  in this format:
                 //  vendor-prefixes ?= webkit moz o ms official
-                includes = options.srcPath + '/**/src/includes/*.styl',
+                includes = path.join(options.srcPath + '/**/src/includes/*.styl'),
                 fileName = path.basename(theme).split('.styl').join('.css');
 
             fileData.push({
                 src: [includes, skinFiles],
-                dest: releasePath + '/' + fileName.replace(options.themePrefix + '-', '')
+                dest: path.join(releasePath, fileName.replace(options.themePrefix + '-', ''))
             });
 
             return fileData;

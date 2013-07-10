@@ -16,13 +16,19 @@
  *
  */
 
-var debug = require('debug')('topcoat');
+var debug = require('debug')('topcoat'),
+    path = require('path');
 
 module.exports = function(grunt) {
     'use strict';
 
     var download = require('./lib/download').init(grunt),
-        compile = require('./lib/compile').init(grunt);
+        compile = require('./lib/compile').init(grunt),
+        // Cache the parent working directory to we can switch
+        //  working directories during npm task loading in compile block
+        //  SEE: line 175
+        parentcwd = process.cwd();
+
 
     grunt.registerMultiTask('topcoat', 'Downloads dependencies and compiles a topcoat css and usage guide', function() {
 
@@ -161,7 +167,17 @@ module.exports = function(grunt) {
 
             done();
 
+            //FIXME: Changing working directories will break when tasks switch
+            //  to require based approach.
+            //  SEE: https://github.com/gruntjs/grunt/issues/839
+
+            //Change the current working directory to resolve npm task
+            //dependency.
+
+            grunt.file.setBase(__dirname, '..');
             grunt.loadNpmTasks('grunt-contrib-stylus');
+            //Switch back to parent process working directory
+            grunt.file.setBase(parentcwd);
             grunt.config('stylus', compile.getCompileData(compileOptions));
             grunt.task.run('stylus');
         }
