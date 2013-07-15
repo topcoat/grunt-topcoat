@@ -22,6 +22,9 @@ module.exports = function(grunt) {
 
     'use strict';
 
+    // Cache the parent working directory to we can switch
+    //  working directories during npm task loading in compile block
+    //  SEE: line 179
     var parentcwd = process.cwd();
     process.chdir(__dirname + '/../');
     grunt.loadNpmTasks('grunt-contrib-stylus');
@@ -63,7 +66,6 @@ module.exports = function(grunt) {
         // callback: function to call once all dependencies have finished
         // downloading
         var downloadResources = function(obj, path, callback) {
-                console.log('downloading',obj,' to => ', path);
                 var urls = [];
                 _.forIn(obj, function(value, key) {
                     var name = download.getDirectoryName(key);
