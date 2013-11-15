@@ -1,27 +1,12 @@
 {
   "name": "grunt-topcoat",
-  "description": "grunt plugin to download topcoat dependencies.",
+  "description": "grunt plugin to manage builds for Topcoat.",
   "version": "0.0.11",
   "homepage": "https://github.com/topcoat/grunt-topcoat",
   "author": {
     "name": "@dam",
     "email": "kristoferjoseph@gmail.com",
     "url": "http://topcoat.io"
-  },
-  "topcoat": {
-    "controls": {
-      "topcoat/button-base": "",
-      "topcoat/input-base": "0.1.0"
-    },
-    "skins": {
-      "topcoat/button": ""
-    },
-    "utils": {
-      "topcoat/utils": ""
-    },
-    "theme": {
-      "topcoat/theme": "0.4.0"
-    }
   },
   "repository": {
     "type": "git",
@@ -44,19 +29,23 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "request": "~2.16.6",
-    "grunt-contrib-stylus": "~0.5.1"
+    "topcoat-resin": "0.0.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.4.3",
     "grunt-contrib-clean": "~0.4.1",
     "grunt": "~0.4.1",
-    "grunt-zip": "~0.9.2",
     "debug": "~0.7.2",
-    "grunt-contrib-nodeunit": "~0.2.0",
-    "grunt-simple-mocha": "~0.4.0"
+    "grunt-simple-mocha": "~0.4.0",
+    "mkdirp": "~0.3.5",
+    "topcoat-theme-mobile-dark": "git://github.com/topcoat/theme-mobile-dark.git",
+    "topcoat-button": "git://github.com/topcoat/button.git#rework"
   },
   "keywords": [
-    "gruntplugin"
+    "gruntplugin",
+    "topcoat",
+    "resin",
+    "build",
+    "CSS"
   ]
 }
