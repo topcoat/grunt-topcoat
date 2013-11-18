@@ -66,10 +66,6 @@ module.exports = function(grunt) {
 
         // Unit tests.
         simplemocha: {
-            options: {
-                ui: 'bdd',
-                reporter: 'Nyan'
-            },
             all: ['test/*.test.js'],
         },
 
