@@ -32,8 +32,8 @@ describe('topcoat', function() {
     });
 
     it('should create the expected mobile dark button file', function() {
-        var actual = read('tmp/mobile-dark-button.out.css'),
-            expected = read('test/expected/mobile-dark-button.expected.css');
+        var actual = read('tmp/mobile-dark-button.out.css').toString().trim(),
+            expected = read('test/expected/mobile-dark-button.expected.css').toString().trim();
         assert.equal(actual, expected, 'Mobile dark button file should match expected result');
     });
 
