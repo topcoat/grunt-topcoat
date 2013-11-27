@@ -29,7 +29,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "topcoat-resin": "~0.1.0"
+    "topcoat-resin": "~0.1.1"
   },
   "devDependencies": {
     "grunt-contrib-jshint": "~0.4.3",
@@ -37,10 +37,7 @@
     "grunt": "~0.4.1",
     "debug": "~0.7.2",
     "grunt-simple-mocha": "~0.4.0",
-    "mkdirp": "~0.3.5",
-    "topcoat-theme-mobile-dark": "git://github.com/topcoat/theme-mobile-dark.git",
-    "topcoat-theme-mobile-light": "git://github.com/topcoat/theme-mobile-light.git",
-    "topcoat-button": "git://github.com/topcoat/button.git#rework"
+    "mkdirp": "~0.3.5"
   },
   "keywords": [
     "gruntplugin",
