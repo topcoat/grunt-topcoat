@@ -1,6 +1,10 @@
 grunt-topcoat
 ==================
 
+[![Build Status](https://travis-ci.org/topcoat/grunt-topcoat.png?branch=master)](https://travis-ci.org/topcoat/grunt-topcoat)
+
+[![NPM](https://nodei.co/npm/grunt-topcoat.png)](https://nodei.co/npm/grunt-topcoat/)
+
 <a href="toc"></a>
 TOC
 =====================
