@@ -25,10 +25,10 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         jshint: {
             all: [
-                'Gruntfile.js',
-                'tasks/*.js',
-                '<%= simplemocha.all %>'
-                ],
+                    'Gruntfile.js',
+                    'tasks/*.js',
+                    '<%= simplemocha.all %>'
+            ],
             options: {
                 jshintrc: '.jshintrc',
             },
@@ -36,68 +36,38 @@ module.exports = function(grunt) {
 
         // Before generating any new files, remove any previously-created files.
         clean: {
-            tests: ['tmp'],
-            zip: [
-                'tmp/src/*.zip',
-                'tmp/src/controls/*.zip',
-                'tmp/src/utils/*.zip',
-                'tmp/src/skins/*.zip'
-                ]
+            tests: ['tmp/*']
         },
 
         // Configuration to be run (and then tested).
         topcoat: {
             options: {
-                repos: '<%= pkg.topcoat %>',
-                src: 'tmp/src',
-                controlsPath: '<%= topcoat.options.src %>/controls',
-                skinsPath: '<%= topcoat.options.src %>/skins',
-                themePath: '<%= topcoat.options.src %>/theme',
-                utilsPath: '<%= topcoat.options.src %>/utils',
-            },
-            download: {
-                options: {
-                    hostname: 'https://github.com/',
-                    proxy: '',
-                    download: true,
-                    compile: false
-                }
+                // This is where you would specify target browsers for build.
+                browsers: ['last 2 versions'],
+                namespace: 'topcoat',
+                license: grunt.file.read('test/fixtures/license.txt', 'utf-8')
             },
             compile: {
-                options: {
-                    themePrefix: 'theme',
-                    download: false,
-                    compile: true,
-                    releasePath: 'tmp/css'
-                }
-            }
-        },
-
-        unzip: {
-            controls: {
-                src: "tmp/src/controls/*.zip",
-                dest: "tmp/src/controls"
+                files: [{
+                        src: ['test/fixtures/mobile-dark-button.css'],
+                        dest: 'tmp/mobile-dark-button.out.css'
+                    }
+                ]
             },
-            theme: {
-                src: "tmp/src/theme/*.zip",
-                dest: "tmp/src/theme"
-            },
-            utils: {
-                src: "tmp/src/utils/*.zip",
-                dest: "tmp/src/utils"
-            },
-            skins: {
-                src: "tmp/src/skins/*.zip",
-                dest: "tmp/src/skins"
+            compile_all: {
+                files: [{
+                        expand: true,
+                        cwd: 'test/fixtures',
+                        src: ['*.css'],
+                        dest: 'tmp/',
+                        ext: '.out.css'
+                    }
+                ]
             }
         },
 
         // Unit tests.
         simplemocha: {
-            options: {
-                ui: 'bdd',
-                reporter: 'Nyan'
-            },
             all: ['test/*.test.js'],
         },
 
@@ -110,7 +80,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-simple-mocha');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
-    grunt.loadNpmTasks('grunt-zip');
 
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this
     // plugin's task(s), then test the result.

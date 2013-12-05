@@ -16,30 +16,30 @@
  *
  */
 
-/*global describe, it*/
+/*global describe, it, before*/
 
 'use strict';
 
 var grunt = require('grunt'),
     assert = require('assert'),
-    fs    = require('fs'),
-    debug = require('debug')('test');
+    read = require('fs').readFileSync,
+    mkdirp = require('mkdirp');
 
 describe('topcoat', function() {
 
-    it('should download correct resources', function() {
-        assert.equal(true, fs.existsSync('tmp/src/controls/input-base-0.1.0'));
-        assert.equal(true, fs.existsSync('tmp/src/controls/button-base'));
-        assert.equal(true, fs.existsSync('tmp/src/utils/utils'));
-        assert.equal(true, fs.existsSync('tmp/src/theme/theme-0.4.0'));
-        assert.equal(true, fs.existsSync('tmp/src/skins/button'));
+    before(function() {
+        mkdirp.sync('tmp');
     });
 
-    it('should create the correct output css files', function() {
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-desktop-light.css'));
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-desktop-dark.css'));
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-mobile-light.css'));
-        assert.equal(true, fs.existsSync('tmp/css/topcoat-mobile-dark.css'));
+    it('should create the expected mobile dark button file', function() {
+        var actual = read('tmp/mobile-dark-button.out.css').toString().trim(),
+            expected = read('test/expected/mobile-dark-button.expected.css').toString().trim();
+        assert.equal(actual, expected, 'Mobile dark button file should match expected result');
+    });
+
+    it('should create the expected mobile light button file', function() {
+        var actual = read('tmp/mobile-light-button.out.css').toString().trim(),
+            expected = read('test/expected/mobile-light-button.expected.css').toString().trim();
+        assert.equal(actual, expected, 'Mobile light button file should match expected result');
     });
 });
-
