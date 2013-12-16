@@ -22,27 +22,19 @@
     }
   ],
   "main": "Gruntfile.js",
-  "engines": {
-    "node": ">= 0.8.0"
-  },
+  "engines": {},
   "scripts": {
     "test": "grunt test"
   },
   "dependencies": {
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt": "~0.4.2",
-    "grunt-contrib-jshint": "~0.4.3",
-    "topcoat-resin": "~0.2.1"
+    "topcoat-resin": "~0.2.2"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt-contrib-clean": "~0.4.1",
-    "grunt": "~0.4.1",
-    "debug": "~0.7.2",
+    "grunt-contrib-clean": "~0.5.0",
     "grunt-simple-mocha": "~0.4.0",
-    "mkdirp": "~0.3.5",
-    "topcoat-theme-mobile-dark": "~0.1.5",
-    "topcoat-theme-mobile-light": "~0.1.4"
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.4.3",
+    "mkdirp": "~0.3.5"
   },
   "keywords": [
     "gruntplugin",
