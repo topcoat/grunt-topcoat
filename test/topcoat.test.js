@@ -37,9 +37,10 @@ describe('topcoat', function() {
         assert.equal(actual, expected, 'Mobile dark button file should match expected result');
     });
 
-    it('should create the expected mobile light button file', function() {
-        var actual = read('tmp/mobile-light-button.out.css').toString().trim(),
-            expected = read('test/expected/mobile-light-button.expected.css').toString().trim();
-        assert.equal(actual, expected, 'Mobile light button file should match expected result');
+    it('should create the expected mobile dark button debug file', function() {
+        var actual = read('tmp/mobile-dark-button-debug.out.css').toString().trim(),
+            expected = read('test/expected/mobile-dark-button-debug.expected.css').toString().trim();
+        assert.equal(actual, expected, 'Mobile dark button file should match expected debug result');
     });
+
 });

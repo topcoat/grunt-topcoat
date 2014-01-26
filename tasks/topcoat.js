@@ -21,7 +21,7 @@ var resin = require('topcoat-resin');
 module.exports = function(grunt) {
     'use strict';
 
-    grunt.registerMultiTask('topcoat', 'Compile Topcoat CSS files', function() {
+    grunt.registerMultiTask('topcoat', 'Compile CSS files', function() {
 
         var options = this.options();
 

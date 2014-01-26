@@ -47,20 +47,20 @@ module.exports = function(grunt) {
                 namespace: 'topcoat',
                 license: grunt.file.read('test/fixtures/license.txt', 'utf-8')
             },
-            compile: {
+            debug: {
+                options: {
+                    debug: true
+                },
                 files: [{
-                        src: ['test/fixtures/mobile-dark-button.css'],
-                        dest: 'tmp/mobile-dark-button.out.css'
+                        src: 'test/fixtures/mobile-dark-button-debug.css',
+                        dest: 'tmp/mobile-dark-button-debug.out.css'
                     }
                 ]
             },
-            compile_all: {
+            compile: {
                 files: [{
-                        expand: true,
-                        cwd: 'test/fixtures',
-                        src: ['*.css'],
-                        dest: 'tmp/',
-                        ext: '.out.css'
+                        src: 'test/fixtures/mobile-dark-button.css',
+                        dest: 'tmp/mobile-dark-button.out.css'
                     }
                 ]
             }
