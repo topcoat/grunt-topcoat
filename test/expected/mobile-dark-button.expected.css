@@ -16,28 +16,12 @@
 *
 */
 @font-face {
-  font-family: "Source Sans";
+  font-family: "Source Sans Pro";
   src: url('../font/SourceSansPro-Regular.otf');
 }
 
-@font-face {
-  font-family: "Source Sans";
-  src: url('../font/SourceSansPro-Light.otf');
-  font-weight: 200;
-}
-
-@font-face {
-  font-family: "Source Sans";
-  src: url('../font/SourceSansPro-Semibold.otf');
-  font-weight: 600;
-}
-
 body {
-  margin: 0;
-  padding: 0;
-  background: var-background--body;
-  color: #000;
-  font: 16px "Source Sans", helvetica, arial, sans-serif;
+  font: 16px "Source Sans Pro", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-weight: 400;
 }
 
@@ -123,11 +107,8 @@ body {
 
 .topcoat-button:disabled,
 .topcoat-button--quiet:disabled,
-.topcoat-button--quiet:disabled,
 .topcoat-button--large:disabled,
 .topcoat-button--large:disabled,
-.topcoat-button--large--quiet:disabled,
-.topcoat-button--large--quiet:disabled,
 .topcoat-button--large--quiet:disabled,
 .topcoat-button--cta:disabled,
 .topcoat-button--cta:disabled,
@@ -182,20 +163,22 @@ body {
   color: hsla(180, 2%, 78%, 1);
   text-shadow: 0 -1px hsla(0, 0%, 0%, 0.69);
   vertical-align: top;
+  border-radius: 6px;
+}
+
+.topcoat-button,
+.topcoat-button--large,
+.topcoat-button--cta,
+.topcoat-button--large--cta {
   background-color: hsla(180, 1%, 35%, 1);
   box-shadow: inset 0 1px hsla(0, 0%, 45%, 1);
   border: 1px solid hsla(180, 1%, 20%, 1);
-  border-radius: 6px;
 }
 
 .topcoat-button:hover,
 .topcoat-button--quiet:hover,
-.topcoat-button--quiet:hover,
 .topcoat-button--large:hover,
 .topcoat-button--large:hover,
-.topcoat-button--large--quiet:hover,
-.topcoat-button--large--quiet:hover,
-.topcoat-button--large--quiet:hover,
 .topcoat-button--large--quiet:hover,
 .topcoat-button--cta:hover,
 .topcoat-button--large--cta:hover,
@@ -204,12 +187,8 @@ body {
 }
 
 .topcoat-button:active,
-.topcoat-button--quiet:active,
 .topcoat-button--large:active,
 .topcoat-button--large:active,
-.topcoat-button--large--quiet:active,
-.topcoat-button--large--quiet:active,
-.topcoat-button--large--quiet:active,
 .topcoat-button--cta:active,
 .topcoat-button--large--cta:active,
 .topcoat-button--large--cta:active {
@@ -219,11 +198,8 @@ body {
 
 .topcoat-button:focus,
 .topcoat-button--quiet:focus,
-.topcoat-button--quiet:focus,
 .topcoat-button--large:focus,
 .topcoat-button--large:focus,
-.topcoat-button--large--quiet:focus,
-.topcoat-button--large--quiet:focus,
 .topcoat-button--large--quiet:focus,
 .topcoat-button--cta:focus,
 .topcoat-button--cta:focus,

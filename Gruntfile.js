@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                     debug: true
                 },
                 files: [{
-                        src: 'test/fixtures/mobile-dark-button-debug.css',
+                        src: 'test/fixtures/mobile-dark-button.css',
                         dest: 'tmp/mobile-dark-button-debug.out.css'
                     }
                 ]
