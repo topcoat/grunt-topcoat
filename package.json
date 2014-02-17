@@ -27,7 +27,7 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "topcoat-resin": "~0.4.2"
+    "resin": "~0.3.0"
   },
   "devDependencies": {
     "grunt-contrib-clean": "~0.5.0",

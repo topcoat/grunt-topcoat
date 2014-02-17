@@ -16,7 +16,7 @@
  *
  */
 
-var resin = require('topcoat-resin');
+var resin = require('resin');
 
 module.exports = function(grunt) {
     'use strict';
