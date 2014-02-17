@@ -37,9 +37,21 @@ topcoat: {
         // This is where you would specify target browsers for build.
         browsers: ['last 2 versions'],
         namespace: 'topcoat',
-        license: grunt.file.read('test/fixtures/license.txt', 'utf-8')
+        license: 'test/fixtures/license.txt',
+        vars: true,
+        extend: true
     },
     compile: {
+        files: [{
+                src: ['test/fixtures/mobile-dark-button.css'],
+                dest: 'tmp/mobile-dark-button.out.css'
+            }
+        ]
+    },
+    debug: {
+        options: {
+            debug: true
+        },
         files: [{
                 src: ['test/fixtures/mobile-dark-button.css'],
                 dest: 'tmp/mobile-dark-button.out.css'
