@@ -45,9 +45,7 @@ module.exports = function(grunt) {
                 // This is where you would specify target browsers for build.
                 browsers: ['last 2 versions'],
                 namespace: 'topcoat',
-                license: 'test/fixtures/license.txt',
-                vars: true,
-                extend: true
+                license: 'test/fixtures/license.txt'
             },
             debug: {
                 options: {

@@ -35,6 +35,8 @@ module.exports = function(grunt) {
                 }
             }).map(function(filepath) {
                 options.src = filepath;
+                options.vars = true;
+                options.extend = true;
                 grunt.file.write(f.dest, resin(options));
             });
         });
