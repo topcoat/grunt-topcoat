@@ -80,7 +80,7 @@ Options
 * `browsers`:
     * Your target browsers
     * defaults to the last two releases
-* `namspace`:
+* `namespace`:
     * The namespace to prefix your class selectors with. This can be used to avoid class name collisions
     * defaults to 'topcoat'
 * `license`:
